@@ -1,17 +1,43 @@
-const app = document.getElementById("app");
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>PlumbWise App</title>
+  <style>
+    html,body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:#0f172a;color:#e5e7eb}
+    .wrap{max-width:900px;margin:0 auto;padding:18px}
+    .card{background:#0b1223;border:1px solid #1f2a44;border-radius:12px;padding:16px;margin:14px 0}
+    .btn{display:inline-block;padding:10px 14px;border:1px solid #27324f;border-radius:10px;text-decoration:none;color:#e5e7eb;background:#1e293b}
+    .btn.primary{background:#2563eb;border-color:#2563eb}
+    .muted{color:#94a3b8}
+  </style>
+</head>
+<body class="wrap">
+  <header class="card">
+    <a class="btn" href="/">← Home</a>
+    <h1>PlumbWise Revision</h1>
+  </header>
 
-const modules = [
-  {id:"safety", title:"Health & Safety / PPE"},
-  {id:"tools", title:"Hand & Power Tools"},
-  {id:"cold", title:"Cold Water Systems"},
-  {id:"hot", title:"Hot Water & Unvented (G3 basics)"},
-  {id:"drain", title:"Drainage & Sanitation"}
-];
+  <main id="app"></main>
 
-app.innerHTML = `
-  <div class="card">
-    <h2>Modules</h2>
-    <ul>${modules.map(m=>`<li>${m.title}</li>`).join("")}</ul>
-    <p class="muted">We’ll add revision notes, quizzes, and subscriptions next.</p>
-  </div>
-`;
+  <script type="module">
+    const app = document.getElementById("app");
+    const modules = [
+      {id:"safety", title:"Health & Safety / PPE"},
+      {id:"tools",  title:"Hand & Power Tools"},
+      {id:"cold",   title:"Cold Water Systems"},
+      {id:"hot",    title:"Hot Water & Unvented (G3 basics)"},
+      {id:"drain",  title:"Drainage & Sanitation"}
+    ];
+
+    app.innerHTML = `
+      <div class="card">
+        <h2>Modules</h2>
+        <ul>${modules.map(m=>`<li>${m.title}</li>`).join("")}</ul>
+        <p class="muted">We’ll add revision notes, quizzes, and subscriptions next.</p>
+      </div>
+    `;
+  </script>
+</body>
+</html>
