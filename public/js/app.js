@@ -21,6 +21,16 @@ const MODULES = [
 
 /* ---------- Revision notes (short, bite-size) ---------- */
 const NOTES = {
+   const RESOURCES = {
+  hs: [
+    { label: "Hot Works Safety (PPTX)", file: "/resources/hs/hot-works-safety.pptx" },
+    { label: "PPE Quick Guide (PDF)",   file: "/resources/hs/ppe-quick-guide.pdf" }
+  ],
+  elec: [
+    { label: "Safe Isolation (PDF)",    file: "/resources/elec/safe-isolation.pdf" }
+  ],
+  sci: [], proc: [], cold: [], hot: [], ch: [], san: [], drn: [], comm: [], wr: []
+};
   hs: [
     "Dynamic risk assessment; stop if new hazards appear.",
     "PPE: boots, gloves, eye/ear protection where needed.",
