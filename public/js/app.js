@@ -21,17 +21,6 @@ const MODULES = [
 
 /* ---------- Revision notes (short, bite-size) ---------- */
 const NOTES = {
-   const RESOURCES = {
-  hs: [
-    { label: "Hot Works Safety (PPTX)", file: "/resources/hs/hot-works-safety.pptx" },
-    { label: "PPE Quick Guide (PDF)",   file: "/resources/hs/ppe-quick-guide.pdf" }
-  ],
-  elec: [
-    { label: "Safe Isolation (PDF)",    file: "/resources/elec/safe-isolation.pdf" }
-  ],
-  sci: [], proc: [], cold: [], hot: [], ch: [], san: [], drn: [], comm: [], wr: []
-};
-
   hs: [
     "Dynamic risk assessment; stop if new hazards appear.",
     "PPE: boots, gloves, eye/ear protection where needed.",
@@ -231,28 +220,10 @@ function renderHome(){
 window.openRevision = (id)=>{
   const mod = MODULES.find(m=>m.id===id);
   const notes = NOTES[id] || [];
-  const files = (typeof RESOURCES!=='undefined' ? RESOURCES[id] : []) || [];
-
   app.innerHTML = `
     <div class="card">
       <h2>${mod.title} — Revision</h2>
       ${notes.length ? notes.map(n=>`<div class="note">${n}</div>`).join("") : `<div class="note">No notes yet.</div>`}
-
-      ${files.length ? `
-        <div class="card" style="margin-top:12px">
-          <h3>Resources</h3>
-          <ul style="line-height:1.9; padding-left:18px">
-            ${files.map(r => `
-              <li>
-                <a class="btn" href="${r.file}" target="_blank" rel="noopener">View</a>
-                <a class="btn" href="${r.file}" download>Download</a>
-                <span class="muted" style="margin-left:8px">${r.label}</span>
-              </li>
-            `).join("")}
-          </ul>
-          <p class="muted">PDFs open in the browser. PowerPoints usually download.</p>
-        </div>` : ``}
-
       <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap">
         <button class="btn primary" onclick="startQuiz('${id}')">Start Mock</button>
         <a class="btn" href="#" onclick="renderHome();return false;">← Back</a>
