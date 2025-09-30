@@ -20,24 +20,7 @@ const MODULES = [
 ];
 
 /* ---------- Revision notes (short, bite-size) ---------- */
-const RESOURCES = {
-  hs: [
-    { label: " Health and safety powerpoint 1 (PDF)", file: "/resources/hs/6035 Health and safety powerpoint 1.pdf" },
-    { label: "Hot Works Safety (PPTX)", file: "/resources/hs/hot-works-safety.pptx" }
-  ],
-  elec: [
-    { label: "Safe Isolation (PDF)", file: "/resources/elec/safe-isolation.pdf" }
-  ],
-  sci:  [],
-  proc: [],
-  cold: [],
-  hot:  [],
-  ch:   [],
-  san:  [],
-  drn:  [],
-  comm: [],
-  wr:   []
-};
+const NOTES = {
   hs: [
     "Dynamic risk assessment; stop if new hazards appear.",
     "PPE: boots, gloves, eye/ear protection where needed.",
