@@ -21,6 +21,96 @@ const MODULES = [
 
 /* ---------- Revision notes (short, bite-size) ---------- */
 const NOTES = {
+  const RESOURCES = {
+  hs: [
+    { label: "6035 Health and Safety PowerPoint 1", file: "/resources/hs/6035 Health and safety powerpoint 1.pdf" },
+    { label: "6035 Health and Safety PowerPoint 2", file: "/resources/hs/6035 Health and safety powerpoint 2.pdf" },
+    { label: "6035 Health and Safety PowerPoint 3", file: "/resources/hs/6035 Health and safety powerpoint 3.pdf" },
+    { label: "6035 Health and Safety PowerPoint 4", file: "/resources/hs/6035 Health and safety powerpoint 4.pdf" },
+    { label: "6035 Health and Safety PowerPoint 5", file: "/resources/hs/6035 Health and safety powerpoint 5.pdf" },
+    { label: "6035 Health and Safety PowerPoint 6", file: "/resources/hs/6035 Health and safety powerpoint 6.pdf" },
+    { label: "Health and Safety Revision Study Pack (2014)", file: "/resources/hs/Health and Safety Revision Study Pack 2014 reduced.pdf" }
+  ],
+
+  elec: [
+    { label: "6035 Electrical 1", file: "/resources/elec/6035 electrical 1.pdf" },
+    { label: "6035 Electrical 2", file: "/resources/elec/6035 electrical 2.pdf" },
+    { label: "6035 Electrical 3", file: "/resources/elec/6035 electrical 3.pdf" },
+    { label: "6035 Electrical 5", file: "/resources/elec/6035 electrical 5.pdf" },
+    { label: "6035 Electrical 6", file: "/resources/elec/6035 electrical 6.pdf" }
+  ],
+
+  sci: [
+    { label: "Science 1", file: "/resources/sci/6035_l2u203_Science 1.pdf" },
+    { label: "Science 2", file: "/resources/sci/6035_l2u203_Science 2.pdf" },
+    { label: "Science 3", file: "/resources/sci/6035_l2u203_Science 3.pdf" },
+    { label: "Science 4", file: "/resources/sci/6035_l2u203_Science 4.pdf" },
+    { label: "Science 5", file: "/resources/sci/6035_l2u203_Science 5.pdf" },
+    { label: "Science 6", file: "/resources/sci/6035_l2u203_Science 6.pdf" },
+    { label: "Key Plumbing Principles Level 2 Revision", file: "/resources/sci/Key Plumbing Principles level 2 Revision.pdf" }
+  ],
+
+  proc: [
+    { label: "Unit 204 Outcome 1", file: "/resources/proc/6035_l2u204_ppt_outcome1.pdf" },
+    { label: "Unit 204 Outcome 3", file: "/resources/proc/6035_l2u204_ppt_outcome3.pdf" },
+    { label: "Unit 204 Outcome 4", file: "/resources/proc/6035_l2u204_ppt_outcome4.pdf" },
+    { label: "Unit 204 Outcome 5", file: "/resources/proc/6035_l2u204_ppt_outcome5.pdf" },
+    { label: "Unit 204 Outcome 6", file: "/resources/proc/6035_l2u204_ppt_outcome6.pdf" },
+    { label: "Unit 204 Outcome 7", file: "/resources/proc/6035_l2u204_ppt_outcome7.pdf" }
+  ],
+
+  cold: [
+    { label: "Unit 205 Outcome 1", file: "/resources/cold/6035_l2u205_ppt_outcome1.pdf" },
+    { label: "Unit 205 Outcome 2", file: "/resources/cold/6035_l2u205_ppt_outcome2.pdf" },
+    { label: "Unit 205 Outcome 3", file: "/resources/cold/6035_l2u205_ppt_outcome3.pdf" },
+    { label: "Unit 205 Outcome 4", file: "/resources/cold/6035_l2u205_ppt_outcome4.pdf" },
+    { label: "Unit 205 Outcome 5", file: "/resources/cold/6035_l2u205_ppt_outcome5.pdf" },
+    { label: "Unit 205 Outcome 6", file: "/resources/cold/6035_l2u205_ppt_outcome6.pdf" }
+  ],
+
+  hot: [
+    { label: "Unit 206 Outcome 1 (Part 1)", file: "/resources/hot/6035_l2u206_ppt_outcome1_part_1.pdf" },
+    { label: "Unit 206 Outcome 1 (Part 2)", file: "/resources/hot/6035_l2u206_ppt_outcome1_part_2.pdf" },
+    { label: "Unit 206 Outcome 2", file: "/resources/hot/6035_l2u206_ppt_outcome2.pdf" },
+    { label: "Unit 206 Outcome 3 (Part 1)", file: "/resources/hot/6035_l2u206_ppt_outcome3_part_1.pdf" },
+    { label: "Unit 206 Outcome 3 (Part 2)", file: "/resources/hot/6035_l2u206_ppt_outcome3_part_2.pdf" },
+    { label: "Unit 206 Outcome 4", file: "/resources/hot/6035_l2u206_ppt_outcome4.pdf" },
+    { label: "Unit 206 Outcome 5", file: "/resources/hot/6035_l2u206_ppt_outcome5.pdf" },
+    { label: "Unit 206 Outcome 6", file: "/resources/hot/6035_l2u206_ppt_outcome6.pdf" }
+  ],
+
+  ch: [
+    { label: "Unit 208 Outcome 1 (Part 1)", file: "/resources/ch/6035_l2u208_ppt_outcome1_part_1.pdf" },
+    { label: "Unit 208 Outcome 1 (Part 2)", file: "/resources/ch/6035_l2u208_ppt_outcome1_part_2.pdf" },
+    { label: "Unit 208 Outcome 1 (Part 3)", file: "/resources/ch/6035_l2u208_ppt_outcome1_part_3.pdf" },
+    { label: "Unit 208 Outcome 2", file: "/resources/ch/6035_l2u208_ppt_outcome2.pdf" },
+    { label: "Unit 208 Outcome 3 (Part 1)", file: "/resources/ch/6035_l2u208_ppt_outcome3_part_1.pdf" },
+    { label: "Unit 208 Outcome 3 (Part 2)", file: "/resources/ch/6035_l2u208_ppt_outcome3_part_2.pdf" },
+    { label: "Unit 208 Outcome 4", file: "/resources/ch/6035_l2u208_ppt_outcome4.pdf" }
+  ],
+
+  san: [
+    { label: "Unit 209 Outcome 1 (Part 1)", file: "/resources/san/6035_l2u209_ppt_outcome1_part_1.pdf" },
+    { label: "Unit 209 Outcome 1 (Part 2)", file: "/resources/san/6035_l2u209_ppt_outcome1_part_2.pdf" },
+    { label: "Unit 209 Outcome 1 (Part 3)", file: "/resources/san/6035_l2u209_ppt_outcome1_part_3.pdf" },
+    { label: "Unit 209 Outcome 2 (Part 1)", file: "/resources/san/6035_l2u209_ppt_outcome2_part_1.pdf" },
+    { label: "Unit 209 Outcome 2 (Part 2)", file: "/resources/san/6035_l2u209_ppt_outcome2_part_2.pdf" },
+    { label: "Unit 209 Outcome 3", file: "/resources/san/6035_l2u209_ppt_outcome3.pdf" },
+    { label: "Unit 209 Outcome 4 (Part 1)", file: "/resources/san/6035_l2u209_ppt_outcome4_part_1.pdf" },
+    { label: "Unit 209 Outcome 4 (Part 2)", file: "/resources/san/6035_l2u209_ppt_outcome4_part_2.pdf" },
+    { label: "Unit 209 Outcome 4 (Part 3)", file: "/resources/san/6035_l2u209_ppt_outcome4_part_3.pdf" },
+    { label: "Unit 209 Outcome 4 (Part 4)", file: "/resources/san/6035_l2u209_ppt_outcome4_part_4.pdf" }
+  ],
+
+  comm: [
+    { label: "6035 Communication 1", file: "/resources/comm/6035 communication 1.pdf" },
+    { label: "6035 Communication 2", file: "/resources/comm/6035 communication 2.pdf" },
+    { label: "6035 Communication 3", file: "/resources/comm/6035 communication 3.pdf" },
+    { label: "Effective Working Relationships L2 Revision", file: "/resources/comm/Effective Working Relationships Level 2 Revision.pdf" }
+  ],
+
+  wr: []
+}; 
   hs: [
     "Dynamic risk assessment; stop if new hazards appear.",
     "PPE: boots, gloves, eye/ear protection where needed.",
