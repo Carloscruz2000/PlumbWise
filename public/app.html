@@ -12,36 +12,37 @@
     <h1>PlumbWise — Revision & Mocks</h1>
     <p class="muted">Tap a module → Revision to see notes + resources, or start a Mock.</p>
   </header>
+
   <main id="app"></main>
 
-  <!-- Inline JS fallback so the grid renders even if /js/app.js is missing -->
+  <!-- Inline fallback so the grid appears 100% -->
   <script>
     const app = document.getElementById("app");
     const MODULES = [
-      { id: "hs",   title: "Health & Safety" },
-      { id: "elec", title: "Electrical" },
-      { id: "sci",  title: "Scientific Principles" },
-      { id: "proc", title: "Plumbing Processes" },
-      { id: "cold", title: "Cold Water" },
-      { id: "hot",  title: "Hot Water" },
-      { id: "ch",   title: "Central Heating" },
-      { id: "san",  title: "Sanitation" },
-      { id: "drn",  title: "Drainage" },
-      { id: "comm", title: "Communications" },
-      { id: "wr",   title: "Water Regulations" }
+      { id:"hs", title:"Health & Safety" },
+      { id:"elec", title:"Electrical" },
+      { id:"sci", title:"Scientific Principles" },
+      { id:"proc", title:"Plumbing Processes" },
+      { id:"cold", title:"Cold Water" },
+      { id:"hot", title:"Hot Water" },
+      { id:"ch", title:"Central Heating" },
+      { id:"san", title:"Sanitation" },
+      { id:"drn", title:"Drainage" },
+      { id:"comm", title:"Communications" },
+      { id:"wr", title:"Water Regulations" }
     ];
     app.innerHTML = '<section class="grid">' + MODULES.map(m => `
       <div class="card">
         <h2>${m.title}</h2>
         <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
-          <a class="btn" href="#" onclick="alert('Open Revision for ${m.title}');return false;">Revision</a>
-          <a class="btn primary" href="#" onclick="alert('Start Mock for ${m.title}');return false;">Mock Exam</a>
+          <a class="btn" href="#" onclick="alert('Revision opens for ${m.title}');return false;">Revision</a>
+          <a class="btn primary" href="#" onclick="alert('Mock opens for ${m.title}');return false;">Mock Exam</a>
         </div>
       </div>
     `).join('') + '</section>';
   </script>
 
-  <!-- When your /js/app.js is confirmed present, switch back to: -->
+  <!-- later, once /js/app.js is present, switch to: -->
   <!-- <script src="/js/app.js"></script> -->
 </body>
 </html>
