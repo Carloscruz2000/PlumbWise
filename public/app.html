@@ -17,6 +17,14 @@
     ul{margin:0;padding-left:20px;line-height:1.8}
     li{margin:4px 0}
     .opt{display:block;margin:8px 0}
+
+    /* Inline viewer (soft-protect) */
+    .viewer-modal{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:9999}
+    .viewer-box{background:#0b1223;border:1px solid #1f2a44;border-radius:12px;width:min(1000px,95vw);height:min(90vh,850px);position:relative;overflow:hidden}
+    .viewer-box iframe{width:100%;height:100%;border:0}
+    .wm{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;
+        color:#ffffff1f;font-size:60px;font-weight:800;letter-spacing:2px;transform:rotate(-20deg)}
+    .viewer-top{position:absolute;top:8px;right:8px;display:flex;gap:8px}
   </style>
 </head>
 <body>
@@ -24,13 +32,16 @@
     <header class="card">
       <a class="btn" href="/">← Home</a>
       <h1>PlumbWise — Revision, Resources & Mock Exams</h1>
-      <p class="muted">Open a module → Revision for notes/resources, or start a Mock.</p>
+      <p class="muted">Open a module → Revision to view resources. Downloads are disabled.</p>
     </header>
 
     <main id="app"></main>
   </div>
 
   <script>
+  // Soft-block right click (not bulletproof)
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
   // ---------- Data ----------
   const MODULES = [
     { id: "hs",   title: "Health & Safety" },
@@ -60,7 +71,7 @@
     wr:["WRAS fittings, backflow categories, notify where required."]
   };
 
-  // Your resource files (with spaces preserved)
+  // Your resource files (spaces preserved). Only "View" (no download).
   const RES = {
     hs: [
       { label: "6035 Health and Safety PowerPoint 1", file: "/resources/hs/6035 Health and safety powerpoint 1.pdf" },
@@ -144,18 +155,34 @@
     wr: []
   };
 
-  // Small demo question bank (so Mocks run)
+  // Minimal question bank so Mocks run
   const QB = {
     hs:[{ q:"First step before hot works?", type:"mcq", options:["Warn others","Open window","Risk assessment/permit","Put on gloves"], answer:[2], why:"Control hazards before starting." }],
     elec:[{ q:"Safe isolation requires:", type:"multi", options:["Prove tester","Test supply","Lock-off","Skip proving"], answer:[0,1,2], why:"Prove, test, secure." }],
     sci:[{ q:"1 m head ≈ ?", type:"mcq", options:["0.01 bar","0.1 bar","1 bar","10 bar"], answer:[1], why:"~10 m ≈ 1 bar." }]
   };
 
-  // ---------- Helpers ----------
   const app = document.getElementById("app");
   const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 
-  // ---------- Screens ----------
+  // -------- Viewer (no download button) --------
+  function openInline(path){
+    // Hide default PDF UI where possible
+    const url = path + '#toolbar=0&navpanes=0&scrollbar=0&view=FitH';
+    const modal = document.createElement('div');
+    modal.className = 'viewer-modal';
+    modal.innerHTML = `
+      <div class="viewer-box">
+        <div class="wm">PLUMBWISE</div>
+        <div class="viewer-top">
+          <button class="btn" onclick="this.closest('.viewer-modal').remove()">Close</button>
+        </div>
+        <iframe src="${url}" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  // -------- Screens --------
   function home(){
     const cards = MODULES.map(m=>`
       <div class="card">
@@ -182,11 +209,12 @@
           <div class="card" style="margin-top:12px">
             <h3>Resources</h3>
             <ul>
-              ${files.map(r=>`<li><a class="btn" href="${r.file}" target="_blank" rel="noopener">View</a>
-                               <a class="btn" href="${r.file}" download>Download</a>
-                               <span class="muted" style="margin-left:8px">${r.label}</span></li>`).join("")}
+              ${files.map(r=>`<li>
+                <button class="btn" onclick="openInline('${r.file}')">View</button>
+                <span class="muted" style="margin-left:8px">${r.label}</span>
+              </li>`).join("")}
             </ul>
-            <p class="muted">PDFs open in browser. PowerPoints usually download. If a link 404s, check the exact filename/folder.</p>
+            <p class="muted">Viewing only. Downloads hidden; screenshots can’t be fully prevented.</p>
           </div>` : ``}
         <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap">
           <button class="btn primary" onclick="startQuiz('${id}')">Start Mock</button>
@@ -196,7 +224,7 @@
     `;
   }
 
-  // ---------- Quiz engine (inline) ----------
+  // -------- Quiz engine --------
   function state(pool,title){ return { idx:0, order:shuffle([...pool.keys()]), pool, answers:{}, title }; }
   function startQuiz(id){
     const qs = (QB[id]||[]).map((q,i)=>({...q,_id:`${id}_${i}`}));
@@ -272,6 +300,7 @@
   window.pickOne = pickOne;
   window.toggleMulti = toggleMulti;
   window.submitQ = submitQ;
+  window.openInline = openInline;
 
   // Boot
   home();
