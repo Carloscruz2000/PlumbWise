@@ -3,22 +3,17 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>PlumbWise App</title>
+  <title>PlumbWise — App</title>
   <link rel="stylesheet" href="/css/style.css"/>
 </head>
 <body class="wrap">
   <header class="card">
     <a class="btn" href="/">← Home</a>
     <h1>PlumbWise — Revision & Mocks</h1>
-    <p class="muted">Free preview (we’ll add quizzes next).</p>
+    <p class="muted">Tap a module → Revision to see notes + resources, or start a Mock.</p>
   </header>
-
   <main id="app"></main>
-
-  <footer class="muted" style="margin-top:16px">
-    © PlumbWise
-  </footer>
-
-  <script type="module" src="/js/app.js"></script>
+  <!-- Note: plain script (NOT type="module") to avoid module-loading issues -->
+  <script src="/js/app.js"></script>
 </body>
 </html>
