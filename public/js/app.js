@@ -1,6 +1,8 @@
 /* PlumbWise — modules + revision + resources + simple mocks */
+
 const app = document.getElementById("app");
 
+/* --------- Modules (ids must match folder names & RESOURCES keys) --------- */
 const MODULES = [
   { id: "hs",   title: "Health & Safety", pass: 70 },
   { id: "elec", title: "Electrical", pass: 70 },
@@ -15,20 +17,22 @@ const MODULES = [
   { id: "wr",   title: "Water Regulations", pass: 70 }
 ];
 
+/* --------- Short notes (kept minimal) --------- */
 const NOTES = {
-  hs:["PPE, COSHH, permits, safe isolation."],
+  hs:  ["PPE, COSHH, permits, safe isolation."],
   elec:["RCDs, bonding/earthing, prove-test-prove."],
-  sci:["Pressure≈ρgh; 10m head≈1 bar; expansion control."],
+  sci: ["Pressure≈ρgh; 10m head≈1 bar; expansion control."],
   proc:["Measure, deburr/clean, heat fitting (not solder), press-fit jaw/profile."],
   cold:["Isolation, DCV/backflow, avoid dead legs."],
-  hot:["Store ~60°C+, TMVs, unvented safety set & tundish."],
-  ch:["Sealed systems: expansion vessel, PRV, inhibitor, balance."],
-  san:["50 mm water seal, venting/anti-siphon, correct falls."],
-  drn:["100 mm pipe ≈ 18–90 mm/m fall, rodding points at changes."],
+  hot: ["Store ~60°C+, TMVs, unvented safety set & tundish."],
+  ch:  ["Sealed systems: expansion vessel, PRV, inhibitor, balance."],
+  san: ["50 mm water seal, venting/anti-siphon, correct falls."],
+  drn: ["100 mm pipe ≈ 18–90 mm/m fall, rodding points at changes."],
   comm:["Confirm scope/changes in writing, keep photos/test records."],
-  wr:["WRAS fittings, backflow categories, notify where required."]
+  wr:  ["WRAS fittings, backflow categories, notify where required."]
 };
 
+/* --------- RESOURCES (your filenames as provided; spaces preserved) --------- */
 const RESOURCES = {
   hs: [
     { label: "6035 Health and Safety PowerPoint 1", file: "/resources/hs/6035 Health and safety powerpoint 1.pdf" },
@@ -112,68 +116,94 @@ const RESOURCES = {
   wr: []
 };
 
+/* --------- Minimal demo question bank so Mock button works --------- */
 const QB = {
-  hs:[{ q:"First step before hot works?", type:"mcq", options:["Warn others","Open window","Risk assessment/permit","Put on gloves"], answer:[2] }],
-  elec:[{ q:"Safe isolation requires:", type:"multi", options:["Prove tester","Test supply","Lock-off","Skip proving"], answer:[0,1,2] }],
-  sci:[{ q:"1 m head ≈ ?", type:"mcq", options:["0.01 bar","0.1 bar","1 bar","10 bar"], answer:[1] }]
+  hs:  [{ q:"First step before hot works?", type:"mcq", options:["Warn others","Open window","Risk assessment/permit","Put on gloves"], answer:[2], why:"Control hazards before starting." }],
+  elec:[{ q:"Safe isolation requires:", type:"multi", options:["Prove tester","Test supply","Lock-off","Skip proving"], answer:[0,1,2], why:"Prove, test, secure." }],
+  sci: [{ q:"1 m head ≈ ?", type:"mcq", options:["0.01 bar","0.1 bar","1 bar","10 bar"], answer:[1], why:"~10 m ≈ 1 bar." }]
+  // (other modules can be filled later)
 };
 
+/* --------- Helpers --------- */
+const pct = (n,d)=> d ? Math.round((n/d)*100) : 0;
 const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 
+/* --------- Home (module grid) --------- */
 function renderHome(){
-  const cards = MODULES.map(m=>`
-    <div class="card">
-      <h2>${m.title}</h2>
-      <div class="note">${(NOTES[m.id]||[])[0]||""}</div>
-      <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
-        <button class="btn" onclick="openRevision('${m.id}')">Revision</button>
-        <button class="btn primary" onclick="startQuiz('${m.id}')">Mock Exam</button>
+  const cards = MODULES.map(m=>{
+    return `
+      <div class="card">
+        <h2>${m.title}</h2>
+        <div class="note">${(NOTES[m.id]||[])[0]||""}</div>
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+          <button class="btn" onclick="openRevision('${m.id}')">Revision</button>
+          <button class="btn primary" onclick="startQuiz('${m.id}')">Mock Exam</button>
+        </div>
       </div>
-    </div>`).join("");
-  app.innerHTML = `<section class="grid">${cards}</section>`;
+    `;
+  }).join("");
+
+  app.innerHTML = `
+    <section class="grid">${cards}</section>
+  `;
 }
 
+/* --------- Revision (notes + resources) --------- */
 window.openRevision = (id)=>{
   const mod = MODULES.find(m=>m.id===id);
   const notes = NOTES[id] || [];
   const files = (RESOURCES[id] || []);
+
   app.innerHTML = `
     <div class="card">
       <h2>${mod.title} — Revision</h2>
       ${notes.length ? notes.map(n=>`<div class="note">${n}</div>`).join("") : `<div class="note">No notes yet.</div>`}
+
       ${files.length ? `
         <div class="card" style="margin-top:12px">
           <h3>Resources</h3>
           <ul style="line-height:1.9; padding-left:18px">
-            ${files.map(r=>`
+            ${files.map(r => `
               <li>
                 <a class="btn" href="${r.file}" target="_blank" rel="noopener">View</a>
                 <a class="btn" href="${r.file}" download>Download</a>
                 <span class="muted" style="margin-left:8px">${r.label}</span>
-              </li>`).join("")}
+              </li>
+            `).join("")}
           </ul>
-          <p class="muted">PDFs open in the browser. PPTX usually download. If a link 404s, check the exact filename and folder.</p>
+          <p class="muted">PDFs open in the browser. PowerPoints usually download. If a link 404s, check the exact filename and folder.</p>
         </div>` : ``}
+
       <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap">
         <button class="btn primary" onclick="startQuiz('${id}')">Start Mock</button>
         <a class="btn" href="#" onclick="renderHome();return false;">← Back</a>
       </div>
-    </div>`;
+    </div>
+  `;
 };
 
-function newState(pool,title){ return { idx:0, order:shuffle([...pool.keys()]), pool, answers:{}, title }; }
+/* --------- Simple quiz engine (1–2 demo questions) --------- */
+function newState(pool, title){ return { idx:0, order:shuffle([...pool.keys()]), pool, answers:{}, title }; }
+
 window.startQuiz = (id)=>{
-  const qs = (QB[id]||[]).map((q,i)=>({...q,_id:`${id}_${i}`}));
+  const qs = (QB[id]||[]).map((q,i)=> ({...q, _id:`${id}_${i}`}));
   if(!qs.length){ alert("No questions in this module yet."); return; }
   window._state = newState(qs, `${MODULES.find(m=>m.id===id).title} — Mock`);
   renderQuiz();
 };
+
 function renderQuiz(){
-  const s=window._state; if(!s) return;
-  const i=s.order[s.idx], q=s.pool[i], total=s.pool.length, cur=s.idx+1, sel=s.answers[q._id]||[];
+  const s = window._state; if(!s) return;
+  const i = s.order[s.idx]; const q = s.pool[i];
+  const total = s.pool.length, cur = s.idx+1;
+  const sel = s.answers[q._id] || [];
+
   const opts = (q.type==="multi")
-    ? q.options.map((o,idx)=>`<label class="opt"><input type="checkbox" ${sel.includes(idx)?"checked":""} onchange="toggleMulti('${q._id}',${idx})"/> <span>${o}</span></label>`).join("")
-    : q.options.map((o,idx)=>`<label class="opt"><input type="radio" name="opt" ${sel.includes(idx)?"checked":""} onchange="selectOne('${q._id}',${idx})"/> <span>${o}</span></label>`).join("");
+    ? q.options.map((o,idx)=>`<label class="opt"><input type="checkbox" ${sel.includes(idx)?"checked":""}
+         onchange="toggleMulti('${q._id}',${idx})"/> <span>${o}</span></label>`).join("")
+    : q.options.map((o,idx)=>`<label class="opt"><input type="radio" name="opt" ${sel.includes(idx)?"checked":""}
+         onchange="selectOne('${q._id}',${idx})"/> <span>${o}</span></label>`).join("");
+
   app.innerHTML = `
     <div class="card">
       <h2>${s.title} (${cur}/${total})</h2>
@@ -183,12 +213,47 @@ function renderQuiz(){
         <button class="btn" onclick="nextQ()">Next</button>
         <button class="btn primary" onclick="submitQuiz()">Submit</button>
       </div>
-    </div>`;
+      <div class="muted" style="margin-top:8px">${q.type==="multi" ? "Select all that apply" : "Select one"}.</div>
+    </div>
+  `;
 }
-window.selectOne=(id,idx)=>{const s=window._state; s.answers[id]=[idx]; renderQuiz();};
-window.toggleMulti=(id,idx)=>{const s=window._state; const set=new Set(s.answers[id]||[]); set.has(idx)?set.delete(idx):set.add(idx); s.answers[id]=[...set].sort((a,b)=>a-b);};
-window.nextQ=()=>{const s=window._state; if(s.idx<s.pool.length-1)s.idx++; renderQuiz();};
-window.prevQ=()=>{const s=window._state; if(s.idx>0)s.idx--; renderQuiz();};
-window.submitQuiz=()=>{const s=window._state; let correct=0,total=s.pool.length,review=[]; s.pool.forEach(q=>{const a=s.answers[q._id]||[];const ans=(q.answer||[]).slice().sort((x,y)=>x-y);const ok=a.length===ans.length&&a.every((v,i)=>v===ans[i]); if(ok)correct++; else review.push(q);}); const p=Math.round((correct/total)*100); app.innerHTML = `<div class="card"><h2>${s.title} — Results</h2><p>Score: <b>${p}%</b> (${correct}/${total}) • Pass: 70%</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0"><button class="btn" onclick="renderHome()">Home</button></div></div>`;};
 
+window.selectOne = (id, idx)=>{ const s=window._state; s.answers[id]=[idx]; renderQuiz(); };
+window.toggleMulti = (id, idx)=>{ const s=window._state; const set=new Set(s.answers[id]||[]); set.has(idx)?set.delete(idx):set.add(idx); s.answers[id]=[...set].sort((a,b)=>a-b); };
+
+window.nextQ = ()=>{ const s=window._state; if(s.idx<s.pool.length-1) s.idx++; renderQuiz(); };
+window.prevQ = ()=>{ const s=window._state; if(s.idx>0) s.idx--; renderQuiz(); };
+
+window.submitQuiz = ()=>{
+  const s = window._state; let correct=0, total=s.pool.length, review=[];
+  s.pool.forEach(q=>{
+    const a = s.answers[q._id]||[];
+    const ans = (q.answer||[]).slice().sort((x,y)=>x-y);
+    const ok = a.length===ans.length && a.every((v,i)=>v===ans[i]);
+    if(ok) correct++; else review.push(q);
+  });
+  const p = Math.round((correct/total)*100);
+
+  app.innerHTML = `
+    <div class="card">
+      <h2>${s.title} — Results</h2>
+      <p>Score: <b>${p}%</b> (${correct}/${total}) • Pass: 70%</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin:8px 0">
+        <button class="btn" onclick="renderHome()">Home</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Review</h3>
+      ${ review.length
+          ? review.map(q=>{
+              const corr = q.type==="mcq" ? q.options[q.answer[0]] : q.answer.map(i=>q.options[i]).join(", ");
+              return `<div class="note" style="margin:8px 0"><b>${q.q}</b><br/>Correct: ${corr}<br/>Why: ${q.why||"See notes"}</div>`;
+            }).join("")
+          : "<div class='note'>Perfect!</div>"
+        }
+    </div>
+  `;
+};
+
+/* --------- Kick off --------- */
 renderHome();
