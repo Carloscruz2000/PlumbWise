@@ -17,13 +17,14 @@
     ul{margin:0;padding-left:20px;line-height:1.8}
     li{margin:4px 0}
     .opt{display:block;margin:8px 0}
+
     /* Inline viewer */
     .viewer-modal{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:9999}
     .viewer-box{background:#0b1223;border:1px solid #1f2a44;border-radius:12px;width:min(1000px,95vw);height:min(90vh,850px);position:relative;overflow:hidden}
-    .viewer-box iframe{width:100%;height:100%;border:0}
+    .viewer-top{position:absolute;top:8px;right:8px;display:flex;gap:8px;z-index:2}
     .wm{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;
-        color:#ffffff1f;font-size:60px;font-weight:800;letter-spacing:2px;transform:rotate(-20deg)}
-    .viewer-top{position:absolute;top:8px;right:8px;display:flex;gap:8px}
+        color:#ffffff1f;font-size:60px;font-weight:800;letter-spacing:2px;transform:rotate(-20deg);z-index:1}
+    .pdf-embed{position:absolute;inset:0;border:0;width:100%;height:100%;z-index:0}
   </style>
 </head>
 <body>
@@ -31,7 +32,7 @@
     <header class="card">
       <a class="btn" href="/">← Home</a>
       <h1>PlumbWise — Revision, Resources & Mock Exams</h1>
-      <p class="muted">Open a module → Revision to view resources. Downloads are disabled.</p>
+      <p class="muted">Open a module → Revision to view resources. Downloads are discouraged.</p>
     </header>
     <main id="app"></main>
   </div>
@@ -68,7 +69,6 @@
     wr:["WRAS fittings, backflow categories, notify where required."]
   };
 
-  // FULL resources list (paths must exist under /public/resources/...)
   const RES = {
     hs: [
       { label: "6035 Health and Safety PowerPoint 1", file: "/resources/hs/6035 Health and safety powerpoint 1.pdf" },
@@ -147,12 +147,11 @@
       { label: "6035 Communication 1", file: "/resources/comm/6035 communication 1.pdf" },
       { label: "6035 Communication 2", file: "/resources/comm/6035 communication 2.pdf" },
       { label: "6035 Communication 3", file: "/resources/comm/6035 communication 3.pdf" },
-      { label: "Effective Working Relationships L2 Revision", file: "/resources/comm/Effective Working Relationships Level 2 Revision.pdf" }
+      { label: "Effective Working Relationships Level 2 Revision", file: "/resources/comm/Effective Working Relationships Level 2 Revision.pdf" }
     ],
     wr: []
   };
 
-  // Minimal question bank so Mocks run
   const QB = {
     hs:[{ q:"First step before hot works?", type:"mcq", options:["Warn others","Open window","Risk assessment/permit","Put on gloves"], answer:[2], why:"Control hazards before starting." }],
     elec:[{ q:"Safe isolation requires:", type:"multi", options:["Prove tester","Test supply","Lock-off","Skip proving"], answer:[0,1,2], why:"Prove, test, secure." }],
@@ -162,7 +161,7 @@
   const app = document.getElementById("app");
   const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 
-  // View inline (encodes spaces + checks existence + hides toolbar)
+  // EDGE-FRIENDLY VIEWER (embed + fallback)
   async function openInline(path){
     const encoded = encodeURI(path);
     try {
@@ -175,21 +174,36 @@
       alert("Couldn’t reach the file. Check network and the exact path:\n" + path);
       return;
     }
+
     const url = encoded + '#toolbar=0&navpanes=0&scrollbar=0&view=FitH';
+
+    // Create modal
     const modal = document.createElement('div');
     modal.className = 'viewer-modal';
     modal.innerHTML = `
       <div class="viewer-box">
-        <div class="wm">PLUMBWISE</div>
         <div class="viewer-top">
           <button class="btn" onclick="this.closest('.viewer-modal').remove()">Close</button>
         </div>
-        <iframe src="${url}" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+        <div class="wm">PLUMBWISE</div>
+        <embed class="pdf-embed" src="${url}" type="application/pdf" />
       </div>`;
     document.body.appendChild(modal);
+
+    // Edge fallback: if embed doesn't render, open in new tab
+    const isEdge = navigator.userAgent.includes("Edg");
+    setTimeout(() => {
+      const embed = modal.querySelector('.pdf-embed');
+      // If the embed element has zero height or not rendered, fallback
+      const rendered = embed && embed.offsetHeight > 0;
+      if (isEdge && !rendered) {
+        window.open(url, "_blank", "noopener,noreferrer");
+        // Keep modal for UX or close it:
+        modal.remove();
+      }
+    }, 400);
   }
 
-  // Screens
   function home(){
     const cards = MODULES.map(m=>`
       <div class="card">
@@ -221,7 +235,7 @@
                 <span class="muted" style="margin-left:8px">${r.label}</span>
               </li>`).join("")}
             </ul>
-            <p class="muted">Viewing only. Downloads hidden; screenshots can’t be fully prevented.</p>
+            <p class="muted">Viewing only. Browser toolbars may still appear; screenshots can’t be fully prevented.</p>
           </div>` : ``}
         <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap">
           <button class="btn primary" onclick="startQuiz('${id}')">Start Mock</button>
