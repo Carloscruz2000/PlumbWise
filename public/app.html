@@ -3,46 +3,189 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>PlumbWise — App</title>
-  <link rel="stylesheet" href="/css/style.css"/>
+  <title>PlumbWise — Revision & Resources</title>
+  <style>
+    html,body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:#0f172a;color:#e5e7eb}
+    .wrap{max-width:960px;margin:0 auto;padding:18px}
+    .card{background:#0b1223;border:1px solid #1f2a44;border-radius:12px;padding:16px;margin:14px 0}
+    a.btn{display:inline-block;padding:8px 12px;border:1px solid #27324f;border-radius:10px;text-decoration:none;color:#e5e7eb;background:#111a33}
+    .muted{color:#94a3b8}
+    details{margin:14px 0;border:1px solid #1f2a44;border-radius:10px;background:#0b1426}
+    summary{cursor:pointer;padding:12px 14px;font-weight:600;list-style:none}
+    summary::-webkit-details-marker{display:none}
+    .box{padding:0 14px 14px}
+    ul{margin:0;padding-left:20px;line-height:1.8}
+    li{margin:4px 0}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{display:inline-block;font-size:12px;padding:2px 8px;border:1px solid #2a3557;border-radius:999px;color:#a5b4fc;background:#0f1a3a}
+  </style>
 </head>
-<body class="wrap">
-  <header class="card">
-    <a class="btn" href="/">← Home</a>
-    <h1>PlumbWise — Revision & Mocks</h1>
-    <p class="muted">Tap a module → Revision to see notes + resources, or start a Mock.</p>
-  </header>
+<body>
+  <div class="wrap">
+    <header class="card">
+      <a class="btn" href="/">← Home</a>
+      <h1>PlumbWise — Revision & Resources</h1>
+      <p class="muted">Open a module below and use the links to view or download.</p>
+      <div class="row"><span class="tag">No JavaScript needed</span><span class="tag">Mobile friendly</span></div>
+    </header>
 
-  <main id="app"></main>
-
-  <!-- Inline fallback so the grid appears 100% -->
-  <script>
-    const app = document.getElementById("app");
-    const MODULES = [
-      { id:"hs", title:"Health & Safety" },
-      { id:"elec", title:"Electrical" },
-      { id:"sci", title:"Scientific Principles" },
-      { id:"proc", title:"Plumbing Processes" },
-      { id:"cold", title:"Cold Water" },
-      { id:"hot", title:"Hot Water" },
-      { id:"ch", title:"Central Heating" },
-      { id:"san", title:"Sanitation" },
-      { id:"drn", title:"Drainage" },
-      { id:"comm", title:"Communications" },
-      { id:"wr", title:"Water Regulations" }
-    ];
-    app.innerHTML = '<section class="grid">' + MODULES.map(m => `
-      <div class="card">
-        <h2>${m.title}</h2>
-        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
-          <a class="btn" href="#" onclick="alert('Revision opens for ${m.title}');return false;">Revision</a>
-          <a class="btn primary" href="#" onclick="alert('Mock opens for ${m.title}');return false;">Mock Exam</a>
-        </div>
+    <!-- Health & Safety -->
+    <details class="card" open>
+      <summary>Health & Safety</summary>
+      <div class="box">
+        <ul>
+          <li><a href="/resources/hs/6035 Health and safety powerpoint 1.pdf" target="_blank" rel="noopener">6035 Health and Safety PowerPoint 1</a></li>
+          <li><a href="/resources/hs/6035 Health and safety powerpoint 2.pdf" target="_blank" rel="noopener">6035 Health and Safety PowerPoint 2</a></li>
+          <li><a href="/resources/hs/6035 Health and safety powerpoint 3.pdf" target="_blank" rel="noopener">6035 Health and Safety PowerPoint 3</a></li>
+          <li><a href="/resources/hs/6035 Health and safety powerpoint 4.pdf" target="_blank" rel="noopener">6035 Health and Safety PowerPoint 4</a></li>
+          <li><a href="/resources/hs/6035 Health and safety powerpoint 5.pdf" target="_blank" rel="noopener">6035 Health and Safety PowerPoint 5</a></li>
+          <li><a href="/resources/hs/6035 Health and safety powerpoint 6.pdf" target="_blank" rel="noopener">6035 Health and Safety PowerPoint 6</a></li>
+          <li><a href="/resources/hs/Health and Safety Revision Study Pack 2014 reduced.pdf" target="_blank" rel="noopener">Health & Safety Revision Study Pack (2014)</a></li>
+        </ul>
       </div>
-    `).join('') + '</section>';
-  </script>
+    </details>
 
-  <!-- later, once /js/app.js is present, switch to: -->
-  <!-- <script src="/js/app.js"></script> -->
+    <!-- Electrical -->
+    <details class="card">
+      <summary>Electrical</summary>
+      <div class="box">
+        <ul>
+          <li><a href="/resources/elec/6035 electrical 1.pdf" target="_blank" rel="noopener">6035 Electrical 1</a></li>
+          <li><a href="/resources/elec/6035 electrical 2.pdf" target="_blank" rel="noopener">6035 Electrical 2</a></li>
+          <li><a href="/resources/elec/6035 electrical 3.pdf" target="_blank" rel="noopener">6035 Electrical 3</a></li>
+          <li><a href="/resources/elec/6035 electrical 5.pdf" target="_blank" rel="noopener">6035 Electrical 5</a></li>
+          <li><a href="/resources/elec/6035 electrical 6.pdf" target="_blank" rel="noopener">6035 Electrical 6</a></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Scientific Principles -->
+    <details class="card">
+      <summary>Scientific Principles</summary>
+      <div class="box">
+        <ul>
+          <li><a href="/resources/sci/6035_l2u203_Science 1.pdf" target="_blank" rel="noopener">Science 1</a></li>
+          <li><a href="/resources/sci/6035_l2u203_Science 2.pdf" target="_blank" rel="noopener">Science 2</a></li>
+          <li><a href="/resources/sci/6035_l2u203_Science 3.pdf" target="_blank" rel="noopener">Science 3</a></li>
+          <li><a href="/resources/sci/6035_l2u203_Science 4.pdf" target="_blank" rel="noopener">Science 4</a></li>
+          <li><a href="/resources/sci/6035_l2u203_Science 5.pdf" target="_blank" rel="noopener">Science 5</a></li>
+          <li><a href="/resources/sci/6035_l2u203_Science 6.pdf" target="_blank" rel="noopener">Science 6</a></li>
+          <li><a href="/resources/sci/Key Plumbing Principles level 2 Revision.pdf" target="_blank" rel="noopener">Key Plumbing Principles Level 2 Revision</a></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Plumbing Processes -->
+    <details class="card">
+      <summary>Plumbing Processes</summary>
+      <div class="box">
+        <ul>
+          <li><a href="/resources/proc/6035_l2u204_ppt_outcome1.pdf" target="_blank" rel="noopener">Unit 204 Outcome 1</a></li>
+          <li><a href="/resources/proc/6035_l2u204_ppt_outcome3.pdf" target="_blank" rel="noopener">Unit 204 Outcome 3</a></li>
+          <li><a href="/resources/proc/6035_l2u204_ppt_outcome4.pdf" target="_blank" rel="noopener">Unit 204 Outcome 4</a></li>
+          <li><a href="/resources/proc/6035_l2u204_ppt_outcome5.pdf" target="_blank" rel="noopener">Unit 204 Outcome 5</a></li>
+          <li><a href="/resources/proc/6035_l2u204_ppt_outcome6.pdf" target="_blank" rel="noopener">Unit 204 Outcome 6</a></li>
+          <li><a href="/resources/proc/6035_l2u204_ppt_outcome7.pdf" target="_blank" rel="noopener">Unit 204 Outcome 7</a></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Cold Water -->
+    <details class="card">
+      <summary>Cold Water</summary>
+      <div class="box">
+        <ul>
+          <li><a href="/resources/cold/6035_l2u205_ppt_outcome1.pdf" target="_blank" rel="noopener">Unit 205 Outcome 1</a></li>
+          <li><a href="/resources/cold/6035_l2u205_ppt_outcome2.pdf" target="_blank" rel="noopener">Unit 205 Outcome 2</a></li>
+          <li><a href="/resources/cold/6035_l2u205_ppt_outcome3.pdf" target="_blank" rel="noopener">Unit 205 Outcome 3</a></li>
+          <li><a href="/resources/cold/6035_l2u205_ppt_outcome4.pdf" target="_blank" rel="noopener">Unit 205 Outcome 4</a></li>
+          <li><a href="/resources/cold/6035_l2u205_ppt_outcome5.pdf" target="_blank" rel="noopener">Unit 205 Outcome 5</a></li>
+          <li><a href="/resources/cold/6035_l2u205_ppt_outcome6.pdf" target="_blank" rel="noopener">Unit 205 Outcome 6</a></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Hot Water -->
+    <details class="card">
+      <summary>Hot Water</summary>
+      <div class="box">
+        <ul>
+          <li><a href="/resources/hot/6035_l2u206_ppt_outcome1_part_1.pdf" target="_blank" rel="noopener">Unit 206 Outcome 1 (Part 1)</a></li>
+          <li><a href="/resources/hot/6035_l2u206_ppt_outcome1_part_2.pdf" target="_blank" rel="noopener">Unit 206 Outcome 1 (Part 2)</a></li>
+          <li><a href="/resources/hot/6035_l2u206_ppt_outcome2.pdf" target="_blank" rel="noopener">Unit 206 Outcome 2</a></li>
+          <li><a href="/resources/hot/6035_l2u206_ppt_outcome3_part_1.pdf" target="_blank" rel="noopener">Unit 206 Outcome 3 (Part 1)</a></li>
+          <li><a href="/resources/hot/6035_l2u206_ppt_outcome3_part_2.pdf" target="_blank" rel="noopener">Unit 206 Outcome 3 (Part 2)</a></li>
+          <li><a href="/resources/hot/6035_l2u206_ppt_outcome4.pdf" target="_blank" rel="noopener">Unit 206 Outcome 4</a></li>
+          <li><a href="/resources/hot/6035_l2u206_ppt_outcome5.pdf" target="_blank" rel="noopener">Unit 206 Outcome 5</a></li>
+          <li><a href="/resources/hot/6035_l2u206_ppt_outcome6.pdf" target="_blank" rel="noopener">Unit 206 Outcome 6</a></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Central Heating -->
+    <details class="card">
+      <summary>Central Heating</summary>
+      <div class="box">
+        <ul>
+          <li><a href="/resources/ch/6035_l2u208_ppt_outcome1_part_1.pdf" target="_blank" rel="noopener">Unit 208 Outcome 1 (Part 1)</a></li>
+          <li><a href="/resources/ch/6035_l2u208_ppt_outcome1_part_2.pdf" target="_blank" rel="noopener">Unit 208 Outcome 1 (Part 2)</a></li>
+          <li><a href="/resources/ch/6035_l2u208_ppt_outcome1_part_3.pdf" target="_blank" rel="noopener">Unit 208 Outcome 1 (Part 3)</a></li>
+          <li><a href="/resources/ch/6035_l2u208_ppt_outcome2.pdf" target="_blank" rel="noopener">Unit 208 Outcome 2</a></li>
+          <li><a href="/resources/ch/6035_l2u208_ppt_outcome3_part_1.pdf" target="_blank" rel="noopener">Unit 208 Outcome 3 (Part 1)</a></li>
+          <li><a href="/resources/ch/6035_l2u208_ppt_outcome3_part_2.pdf" target="_blank" rel="noopener">Unit 208 Outcome 3 (Part 2)</a></li>
+          <li><a href="/resources/ch/6035_l2u208_ppt_outcome4.pdf" target="_blank" rel="noopener">Unit 208 Outcome 4</a></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Sanitation -->
+    <details class="card">
+      <summary>Sanitation</summary>
+      <div class="box">
+        <ul>
+          <li><a href="/resources/san/6035_l2u209_ppt_outcome1_part_1.pdf" target="_blank" rel="noopener">Unit 209 Outcome 1 (Part 1)</a></li>
+          <li><a href="/resources/san/6035_l2u209_ppt_outcome1_part_2.pdf" target="_blank" rel="noopener">Unit 209 Outcome 1 (Part 2)</a></li>
+          <li><a href="/resources/san/6035_l2u209_ppt_outcome1_part_3.pdf" target="_blank" rel="noopener">Unit 209 Outcome 1 (Part 3)</a></li>
+          <li><a href="/resources/san/6035_l2u209_ppt_outcome2_part_1.pdf" target="_blank" rel="noopener">Unit 209 Outcome 2 (Part 1)</a></li>
+          <li><a href="/resources/san/6035_l2u209_ppt_outcome2_part_2.pdf" target="_blank" rel="noopener">Unit 209 Outcome 2 (Part 2)</a></li>
+          <li><a href="/resources/san/6035_l2u209_ppt_outcome3.pdf" target="_blank" rel="noopener">Unit 209 Outcome 3</a></li>
+          <li><a href="/resources/san/6035_l2u209_ppt_outcome4_part_1.pdf" target="_blank" rel="noopener">Unit 209 Outcome 4 (Part 1)</a></li>
+          <li><a href="/resources/san/6035_l2u209_ppt_outcome4_part_2.pdf" target="_blank" rel="noopener">Unit 209 Outcome 4 (Part 2)</a></li>
+          <li><a href="/resources/san/6035_l2u209_ppt_outcome4_part_3.pdf" target="_blank" rel="noopener">Unit 209 Outcome 4 (Part 3)</a></li>
+          <li><a href="/resources/san/6035_l2u209_ppt_outcome4_part_4.pdf" target="_blank" rel="noopener">Unit 209 Outcome 4 (Part 4)</a></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Drainage -->
+    <details class="card">
+      <summary>Drainage</summary>
+      <div class="box">
+        <p class="muted">Resources coming soon.</p>
+      </div>
+    </details>
+
+    <!-- Communications -->
+    <details class="card">
+      <summary>Communications</summary>
+      <div class="box">
+        <ul>
+          <li><a href="/resources/comm/6035 communication 1.pdf" target="_blank" rel="noopener">6035 Communication 1</a></li>
+          <li><a href="/resources/comm/6035 communication 2.pdf" target="_blank" rel="noopener">6035 Communication 2</a></li>
+          <li><a href="/resources/comm/6035 communication 3.pdf" target="_blank" rel="noopener">6035 Communication 3</a></li>
+          <li><a href="/resources/comm/Effective Working Relationships Level 2 Revision.pdf" target="_blank" rel="noopener">Effective Working Relationships Level 2 Revision</a></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Water Regulations -->
+    <details class="card">
+      <summary>Water Regulations</summary>
+      <div class="box">
+        <p class="muted">Resources coming soon.</p>
+      </div>
+    </details>
+
+  </div>
 </body>
 </html>
