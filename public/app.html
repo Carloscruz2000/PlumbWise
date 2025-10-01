@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+ <span id="accessState" class="muted" style="margin-left:8px">Access: Locked</span> 
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
 
@@ -48,6 +49,104 @@
   </div>
 
   <script>
+// --- Access state helpers ---
+function setActive(email, active) {
+  const el = document.getElementById("accessState");
+  if (active) {
+    localStorage.setItem("plumbwise_active", "1");
+    if (email) localStorage.setItem("plumbwise_email", email);
+    if (el) el.textContent = "Access: Active";
+  } else {
+    localStorage.removeItem("plumbwise_active");
+    if (el) el.textContent = "Access: Locked";
+  }
+}
+function isActive(){ return localStorage.getItem("plumbwise_active") === "1"; }
+function savedEmail(){ return localStorage.getItem("plumbwise_email") || ""; }
+
+// After returning from Stripe: confirm using session_id
+async function confirmFromSessionId(){
+  const params = new URLSearchParams(location.search);
+  const sid = params.get("session_id");
+  if (!sid) return;
+  try {
+    const res = await fetch("/api/subscription-status", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ session_id: sid })
+    });
+    const data = await res.json();
+    if (data.active) {
+      setActive(data.email, true);
+      history.replaceState({}, "", location.pathname); // remove ?session_id from URL
+      alert("Subscription active – thanks!");
+    } else {
+      setActive(null, false);
+      alert("Couldn’t confirm your subscription yet. If you paid, try Refresh.");
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+// For later visits: verify by email
+async function recheckByEmail(){
+  const email = savedEmail() || prompt("Enter your subscription email to check access:");
+  if (!email) return false;
+  localStorage.setItem("plumbwise_email", email);
+  const res = await fetch("/api/subscription-status", {
+    method:"POST", headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ email })
+  });
+  const data = await res.json();
+  setActive(email, !!data.active);
+  return !!data.active;
+}
+
+// Gate resource/quiz actions
+async function requireActive(){
+  if (isActive()) return true;
+  const ok = await recheckByEmail();
+  if (!ok) {
+    const go = confirm("Subscription required to access. Subscribe now?");
+    if (go) subscribe();
+  }
+  return ok;
+}
+
+// Wrap your openInline and startQuiz
+const _openInline = window.openInline;
+window.openInline = async function(p){
+  if (!(await requireActive())) return;
+  return _openInline(p);
+};
+const _startQuiz = window.startQuiz;
+window.startQuiz = async function(id){
+  if (!(await requireActive())) return;
+  return _startQuiz(id);
+};
+
+// Make Subscribe remember email so rechecks work
+async function subscribe() {
+  const email = prompt("Enter your email to subscribe (receipt will be sent here):");
+  if (!email) return;
+  localStorage.setItem("plumbwise_email", email);
+  try {
+    const res = await fetch("/api/checkout", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (data.url) window.location = data.url;
+    else alert("Checkout failed: " + (data.error || "Unknown error"));
+  } catch { alert("Network error starting checkout."); }
+}
+
+// On load: reflect current state and confirm from session_id if present
+window.addEventListener("DOMContentLoaded", () => {
+  setActive(savedEmail(), isActive());
+  confirmFromSessionId();
+});
+</script>
   // Prevent easy right-click saving (not bulletproof)
   document.addEventListener('contextmenu', e => e.preventDefault());
 
