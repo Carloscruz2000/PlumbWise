@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#60a5fa"/>
+      <stop offset="1" stop-color="#1e40af"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="48" fill="#0b1530"/>
+  <!-- Pipe/Tap icon -->
+  <g fill="none" stroke="url(#g)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M40 156h80v28c0 18-14 32-32 32s-32-14-32-32v-28"/>
+    <path d="M120 156h48a24 24 0 0 0 24-24v-8a24 24 0 0 1 24-24h8"/>
+    <path d="M72 132h48M152 68h-32M136 52v32"/>
+    <circle cx="200" cy="100" r="8" fill="#60a5fa"/>
+  </g>
+  <!-- PW letters -->
+  <text x="128" y="220" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="56" font-weight="700" fill="#93c5fd">PW</text>
+</svg>
