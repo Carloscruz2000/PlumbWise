@@ -34,3 +34,36 @@ self.addEventListener("fetch", e => {
     caches.match(request).then(hit => hit || fetch(request))
   );
 });
+function setActive(email, active){
+  if (active) {
+    localStorage.setItem("plumbwise_active","1");
+    if (email) localStorage.setItem("plumbwise_email", email);
+  } else {
+    localStorage.removeItem("plumbwise_active");
+  }
+  reflectAccessUI();
+}
+function isActive(){ return localStorage.getItem("plumbwise_active")==="1"; }
+function savedEmail(){ return localStorage.getItem("plumbwise_email") || ""; }
+
+function reflectAccessUI(){
+  const badge = document.getElementById("accessState");
+  if (badge) badge.textContent = isActive() ? "Access: Active" : "Access: Locked";
+  const subBtn = [...document.querySelectorAll("button, a.btn")].find(b => /Subscribe/i.test(b?.textContent||""));
+  if (subBtn) subBtn.style.display = isActive() ? "none" : "";
+}
+
+// Re-check on load using saved email (keeps access after refresh)
+window.addEventListener("DOMContentLoaded", async () => {
+  reflectAccessUI();
+  const email = savedEmail();
+  if (!email) return; // nothing to check
+  try {
+    const res = await fetch("/api/subscription-status", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    setActive(email, !!data.active);
+  } catch {}
+});
