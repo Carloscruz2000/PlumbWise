@@ -69,6 +69,7 @@
     wr:["WRAS fittings, backflow categories, notify where required."]
   };
 
+  // FULL resources list — ensure these files exist under /public/resources/<module>/
   const RES = {
     hs: [
       { label: "6035 Health and Safety PowerPoint 1", file: "/resources/hs/6035 Health and safety powerpoint 1.pdf" },
@@ -152,6 +153,7 @@
     wr: []
   };
 
+  // Minimal question bank so Mocks run (add more later)
   const QB = {
     hs:[{ q:"First step before hot works?", type:"mcq", options:["Warn others","Open window","Risk assessment/permit","Put on gloves"], answer:[2], why:"Control hazards before starting." }],
     elec:[{ q:"Safe isolation requires:", type:"multi", options:["Prove tester","Test supply","Lock-off","Skip proving"], answer:[0,1,2], why:"Prove, test, secure." }],
@@ -194,16 +196,15 @@
     const isEdge = navigator.userAgent.includes("Edg");
     setTimeout(() => {
       const embed = modal.querySelector('.pdf-embed');
-      // If the embed element has zero height or not rendered, fallback
       const rendered = embed && embed.offsetHeight > 0;
       if (isEdge && !rendered) {
         window.open(url, "_blank", "noopener,noreferrer");
-        // Keep modal for UX or close it:
         modal.remove();
       }
     }, 400);
   }
 
+  // Screens
   function home(){
     const cards = MODULES.map(m=>`
       <div class="card">
