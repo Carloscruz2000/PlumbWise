@@ -43,7 +43,6 @@
       <h1>PlumbWise — Revision, Resources & Mock Exams</h1>
       <p class="muted">Open a module → Revision to view resources.</p>
 
-      <!-- Subscribe button -->
       <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap">
         <button class="btn primary" onclick="subscribe()">Subscribe (£5.99/mo)</button>
       </div>
@@ -82,15 +81,129 @@
     wr:["WRAS fittings, backflow categories, notify where required."]
   };
 
-  // Example resources object — keep your full RES here
-  const RES = { hs:[], elec:[], sci:[], proc:[], cold:[], hot:[], ch:[], san:[], drn:[], comm:[], wr:[] };
+  /* ===== FULL RESOURCES (ensure files exist under /public/resources/<module>/) ===== */
+  const RES = {
+    hs: [
+      { label: "6035 Health and Safety PowerPoint 1", file: "/resources/hs/6035 Health and safety powerpoint 1.pdf" },
+      { label: "6035 Health and Safety PowerPoint 2", file: "/resources/hs/6035 Health and safety powerpoint 2.pdf" },
+      { label: "6035 Health and Safety PowerPoint 3", file: "/resources/hs/6035 Health and safety powerpoint 3.pdf" },
+      { label: "6035 Health and Safety PowerPoint 4", file: "/resources/hs/6035 Health and safety powerpoint 4.pdf" },
+      { label: "6035 Health and Safety PowerPoint 5", file: "/resources/hs/6035 Health and safety powerpoint 5.pdf" },
+      { label: "6035 Health and Safety PowerPoint 6", file: "/resources/hs/6035 Health and safety powerpoint 6.pdf" },
+      { label: "Health and Safety Revision Study Pack 2014 (reduced)", file: "/resources/hs/Health and Safety Revision Study Pack 2014 reduced.pdf" }
+    ],
+    elec: [
+      { label: "6035 Electrical 1", file: "/resources/elec/6035 electrical 1.pdf" },
+      { label: "6035 Electrical 2", file: "/resources/elec/6035 electrical 2.pdf" },
+      { label: "6035 Electrical 3", file: "/resources/elec/6035 electrical 3.pdf" },
+      { label: "6035 Electrical 5", file: "/resources/elec/6035 electrical 5.pdf" },
+      { label: "6035 Electrical 6", file: "/resources/elec/6035 electrical 6.pdf" }
+    ],
+    sci: [
+      { label: "6035 L2 U203 Science 1", file: "/resources/sci/6035_l2u203_Science 1.pdf" },
+      { label: "6035 L2 U203 Science 2", file: "/resources/sci/6035_l2u203_Science 2.pdf" },
+      { label: "6035 L2 U203 Science 3", file: "/resources/sci/6035_l2u203_Science 3.pdf" },
+      { label: "6035 L2 U203 Science 4", file: "/resources/sci/6035_l2u203_Science 4.pdf" },
+      { label: "6035 L2 U203 Science 5", file: "/resources/sci/6035_l2u203_Science 5.pdf" },
+      { label: "6035 L2 U203 Science 6", file: "/resources/sci/6035_l2u203_Science 6.pdf" },
+      { label: "Key Plumbing Principles Level 2 Revision", file: "/resources/sci/Key Plumbing Principles level 2 Revision.pdf" }
+    ],
+    proc: [
+      { label: "6035 L2 U204 Outcome 1", file: "/resources/proc/6035_l2u204_ppt_outcome1.pdf" },
+      { label: "6035 L2 U204 Outcome 3", file: "/resources/proc/6035_l2u204_ppt_outcome3.pdf" },
+      { label: "6035 L2 U204 Outcome 4", file: "/resources/proc/6035_l2u204_ppt_outcome4.pdf" },
+      { label: "6035 L2 U204 Outcome 5", file: "/resources/proc/6035_l2u204_ppt_outcome5.pdf" },
+      { label: "6035 L2 U204 Outcome 6", file: "/resources/proc/6035_l2u204_ppt_outcome6.pdf" },
+      { label: "6035 L2 U204 Outcome 7", file: "/resources/proc/6035_l2u204_ppt_outcome7.pdf" }
+    ],
+    cold: [
+      { label: "6035 L2 U205 Outcome 1", file: "/resources/cold/6035_l2u205_ppt_outcome1.pdf" },
+      { label: "6035 L2 U205 Outcome 2", file: "/resources/cold/6035_l2u205_ppt_outcome2.pdf" },
+      { label: "6035 L2 U205 Outcome 3", file: "/resources/cold/6035_l2u205_ppt_outcome3.pdf" },
+      { label: "6035 L2 U205 Outcome 4", file: "/resources/cold/6035_l2u205_ppt_outcome4.pdf" },
+      { label: "6035 L2 U205 Outcome 5", file: "/resources/cold/6035_l2u205_ppt_outcome5.pdf" },
+      { label: "6035 L2 U205 Outcome 6", file: "/resources/cold/6035_l2u205_ppt_outcome6.pdf" }
+    ],
+    hot: [
+      { label: "6035 L2 U206 Outcome 1 (Part 1)", file: "/resources/hot/6035_l2u206_ppt_outcome1_part_1.pdf" },
+      { label: "6035 L2 U206 Outcome 1 (Part 2)", file: "/resources/hot/6035_l2u206_ppt_outcome1_part_2.pdf" },
+      { label: "6035 L2 U206 Outcome 2", file: "/resources/hot/6035_l2u206_ppt_outcome2.pdf" },
+      { label: "6035 L2 U206 Outcome 3 (Part 1)", file: "/resources/hot/6035_l2u206_ppt_outcome3_part_1.pdf" },
+      { label: "6035 L2 U206 Outcome 3 (Part 2)", file: "/resources/hot/6035_l2u206_ppt_outcome3_part_2.pdf" },
+      { label: "6035 L2 U206 Outcome 4", file: "/resources/hot/6035_l2u206_ppt_outcome4.pdf" },
+      { label: "6035 L2 U206 Outcome 5", file: "/resources/hot/6035_l2u206_ppt_outcome5.pdf" },
+      { label: "6035 L2 U206 Outcome 6", file: "/resources/hot/6035_l2u206_ppt_outcome6.pdf" }
+    ],
+    ch: [
+      { label: "6035 L2 U208 Outcome 1 (Part 1)", file: "/resources/ch/6035_l2u208_ppt_outcome1_part_1.pdf" },
+      { label: "6035 L2 U208 Outcome 1 (Part 2)", file: "/resources/ch/6035_l2u208_ppt_outcome1_part_2.pdf" },
+      { label: "6035 L2 U208 Outcome 1 (Part 3)", file: "/resources/ch/6035_l2u208_ppt_outcome1_part_3.pdf" },
+      { label: "6035 L2 U208 Outcome 2", file: "/resources/ch/6035_l2u208_ppt_outcome2.pdf" },
+      { label: "6035 L2 U208 Outcome 3 (Part 1)", file: "/resources/ch/6035_l2u208_ppt_outcome3_part_1.pdf" },
+      { label: "6035 L2 U208 Outcome 3 (Part 2)", file: "/resources/ch/6035_l2u208_ppt_outcome3_part_2.pdf" },
+      { label: "6035 L2 U208 Outcome 4", file: "/resources/ch/6035_l2u208_ppt_outcome4.pdf" }
+    ],
+    san: [
+      { label: "6035 L2 U209 Outcome 1 (Part 1)", file: "/resources/san/6035_l2u209_ppt_outcome1_part_1.pdf" },
+      { label: "6035 L2 U209 Outcome 1 (Part 2)", file: "/resources/san/6035_l2u209_ppt_outcome1_part_2.pdf" },
+      { label: "6035 L2 U209 Outcome 1 (Part 3)", file: "/resources/san/6035_l2u209_ppt_outcome1_part_3.pdf" },
+      { label: "6035 L2 U209 Outcome 2 (Part 1)", file: "/resources/san/6035_l2u209_ppt_outcome2_part_1.pdf" },
+      { label: "6035 L2 U209 Outcome 2 (Part 2)", file: "/resources/san/6035_l2u209_ppt_outcome2_part_2.pdf" },
+      { label: "6035 L2 U209 Outcome 3", file: "/resources/san/6035_l2u209_ppt_outcome3.pdf" },
+      { label: "6035 L2 U209 Outcome 4 (Part 1)", file: "/resources/san/6035_l2u209_ppt_outcome4_part_1.pdf" },
+      { label: "6035 L2 U209 Outcome 4 (Part 2)", file: "/resources/san/6035_l2u209_ppt_outcome4_part_2.pdf" },
+      { label: "6035 L2 U209 Outcome 4 (Part 3)", file: "/resources/san/6035_l2u209_ppt_outcome4_part_3.pdf" },
+      { label: "6035 L2 U209 Outcome 4 (Part 4)", file: "/resources/san/6035_l2u209_ppt_outcome4_part_4.pdf" }
+    ],
+    drn: [],
+    comm: [
+      { label: "6035 Communication 1", file: "/resources/comm/6035 communication 1.pdf" },
+      { label: "6035 Communication 2", file: "/resources/comm/6035 communication 2.pdf" },
+      { label: "6035 Communication 3", file: "/resources/comm/6035 communication 3.pdf" },
+      { label: "Effective Working Relationships Level 2 Revision", file: "/resources/comm/Effective Working Relationships Level 2 Revision.pdf" }
+    ],
+    wr: []
+  };
+  /* ===== END RESOURCES ===== */
 
   const QB = {
-    hs:[{ q:"First step before hot works?", type:"mcq", options:["Warn others","Open window","Risk assessment/permit","Put on gloves"], answer:[2], why:"Control hazards before starting." }]
+    hs:[{ q:"First step before hot works?", type:"mcq", options:["Warn others","Open window","Risk assessment/permit","Put on gloves"], answer:[2], why:"Control hazards before starting." }],
+    elec:[{ q:"Safe isolation requires:", type:"multi", options:["Prove tester","Test supply","Lock-off","Skip proving"], answer:[0,1,2], why:"Prove, test, secure." }],
+    sci:[{ q:"1 m head ≈ ?", type:"mcq", options:["0.01 bar","0.1 bar","1 bar","10 bar"], answer:[1], why:"~10 m ≈ 1 bar." }]
   };
 
   const app = document.getElementById("app");
   const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+
+  async function openInline(path){
+    const encoded = encodeURI(path);
+    try {
+      const head = await fetch(encoded, { method: "HEAD" });
+      if (!head.ok) { alert("File not found: "+path); return; }
+    } catch { alert("Couldn’t reach: "+path); return; }
+
+    const url = encoded + '#toolbar=0&navpanes=0&scrollbar=0&view=FitH';
+    const modal = document.createElement('div');
+    modal.className = 'viewer-modal';
+    modal.innerHTML = `
+      <div class="viewer-box">
+        <div class="viewer-top">
+          <button class="btn" onclick="this.closest('.viewer-modal').remove()">Close</button>
+        </div>
+        <div class="wm">PLUMBWISE</div>
+        <embed class="pdf-embed" src="${url}" type="application/pdf" />
+      </div>`;
+    document.body.appendChild(modal);
+
+    // Edge fallback
+    setTimeout(() => {
+      const embed = modal.querySelector('.pdf-embed');
+      if (navigator.userAgent.includes("Edg") && (!embed || embed.offsetHeight===0)) {
+        window.open(url, "_blank","noopener");
+        modal.remove();
+      }
+    }, 400);
+  }
 
   function home(){
     const cards = MODULES.map(m=>`
@@ -123,6 +236,7 @@
                 <span class="muted" style="margin-left:8px">${r.label}</span>
               </li>`).join("")}
             </ul>
+            <p class="muted">Viewing only. Browser toolbars may still appear; screenshots can’t be fully prevented.</p>
           </div>` : ``}
         <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap">
           <button class="btn primary" onclick="startQuiz('${id}')">Start Mock</button>
@@ -132,13 +246,42 @@
     `;
   }
 
+  function state(pool,title){ return { idx:0, order:shuffle([...pool.keys()]), pool, answers:{}, title }; }
   function startQuiz(id){
-    alert("Mock exam for " + id + " coming soon");
+    const qs = (QB[id]||[]).map((q,i)=>({...q,_id:`${id}_${i}`}));
+    if(!qs.length){ alert("No questions in this module yet."); return; }
+    window._q = state(qs, `${MODULES.find(m=>m.id===id).title} — Mock`);
+    renderQ();
   }
+  function renderQ(){
+    const s=window._q; if(!s)return;
+    const i=s.order[s.idx], q=s.pool[i], cur=s.idx+1, total=s.pool.length, sel=s.answers[q._id]||[];
+    const opts = (q.type==="multi")
+      ? q.options.map((o,idx)=>`<label class="opt"><input type="checkbox" ${sel.includes(idx)?"checked":""} onchange="toggleMulti('${q._id}',${idx})"/> ${o}</label>`).join("")
+      : q.options.map((o,idx)=>`<label class="opt"><input type="radio" name="opt" ${sel.includes(idx)?"checked":""} onchange="pickOne('${q._id}',${idx})"/> ${o}</label>`).join("");
+
+    app.innerHTML = `
+      <div class="card">
+        <h2>${s.title} (${cur}/${total})</h2>
+        <b>${q.q}</b><div>${opts}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" onclick="prevQ()">Back</button>
+          <button class="btn" onclick="nextQ()">Next</button>
+          <button class="btn primary" onclick="submitQ()">Submit</button>
+        </div>
+        <p class="muted" style="margin-top:8px">${q.type==="multi"?"Select all that apply":"Select one"}.</p>
+      </div>`;
+  }
+  function pickOne(id,idx){const s=window._q;s.answers[id]=[idx];renderQ();}
+  function toggleMulti(id,idx){const s=window._q;const set=new Set(s.answers[id]||[]);set.has(idx)?set.delete(idx):set.add(idx);s.answers[id]=[...set].sort((a,b)=>a-b);renderQ();}
+  function nextQ(){const s=window._q;if(s.idx<s.pool.length-1)s.idx++;renderQ();}
+  function prevQ(){const s=window._q;if(s.idx>0)s.idx--;renderQ();}
+  function submitQ(){const s=window._q;let correct=0;s.pool.forEach(q=>{const a=s.answers[q._id]||[],ans=(q.answer||[]).slice().sort((x,y)=>x-y);const ok=a.length===ans.length&&a.every((v,i)=>v===ans[i]);if(ok)correct++;});alert("Score: "+correct+"/"+s.pool.length);home();}
+
+  window.revision=revision;window.startQuiz=startQuiz;window.nextQ=nextQ;window.prevQ=prevQ;window.pickOne=pickOne;window.toggleMulti=toggleMulti;window.submitQ=submitQ;window.openInline=openInline;
 
   home();
 
-  // Stripe Subscribe handler
   async function subscribe() {
     const email = prompt("Enter your email to subscribe (receipt will be sent here):");
     if (!email) return;
@@ -149,30 +292,8 @@
         body: JSON.stringify({ email })
       });
       const data = await res.json();
-      if (data.url) {
-        window.location = data.url;
-      } else {
-        alert("Checkout failed: " + (data.error || "Unknown error"));
-      }
-    } catch (e) {
-      alert("Network error starting checkout.");
-    }
-  }
-
-  // Inline resource viewer
-  async function openInline(path){
-    const url = encodeURI(path);
-    const modal = document.createElement('div');
-    modal.className = 'viewer-modal';
-    modal.innerHTML = `
-      <div class="viewer-box">
-        <div class="viewer-top">
-          <button class="btn" onclick="this.closest('.viewer-modal').remove()">Close</button>
-        </div>
-        <div class="wm">PLUMBWISE</div>
-        <embed class="pdf-embed" src="${url}" type="application/pdf" />
-      </div>`;
-    document.body.appendChild(modal);
+      if (data.url) window.location = data.url; else alert("Checkout failed: " + (data.error || "Unknown error"));
+    } catch { alert("Network error starting checkout."); }
   }
   </script>
 
