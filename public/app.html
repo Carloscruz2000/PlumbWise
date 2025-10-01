@@ -17,7 +17,6 @@
     ul{margin:0;padding-left:20px;line-height:1.8}
     li{margin:4px 0}
     .opt{display:block;margin:8px 0}
-
     /* Inline viewer */
     .viewer-modal{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:9999}
     .viewer-box{background:#0b1223;border:1px solid #1f2a44;border-radius:12px;width:min(1000px,95vw);height:min(90vh,850px);position:relative;overflow:hidden}
@@ -33,6 +32,12 @@
       <a class="btn" href="/">← Home</a>
       <h1>PlumbWise — Revision, Resources & Mock Exams</h1>
       <p class="muted">Open a module → Revision to view resources. Downloads are discouraged.</p>
+
+      <!-- NEW: Subscribe button -->
+      <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap">
+        <button class="btn primary" onclick="subscribe()">Subscribe (£5.99/mo)</button>
+      </div>
+      <!-- /NEW -->
     </header>
     <main id="app"></main>
   </div>
@@ -153,7 +158,6 @@
     wr: []
   };
 
-  // Minimal question bank so Mocks run (add more later)
   const QB = {
     hs:[{ q:"First step before hot works?", type:"mcq", options:["Warn others","Open window","Risk assessment/permit","Put on gloves"], answer:[2], why:"Control hazards before starting." }],
     elec:[{ q:"Safe isolation requires:", type:"multi", options:["Prove tester","Test supply","Lock-off","Skip proving"], answer:[0,1,2], why:"Prove, test, secure." }],
@@ -326,6 +330,29 @@
 
   // Boot
   home();
+
+  // ====== NEW: Stripe Subscribe handler ======
+  async function subscribe() {
+    const email = prompt("Enter your email to subscribe (receipt will be sent here):");
+    if (!email) return;
+
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location = data.url;
+      } else {
+        alert("Checkout failed: " + (data.error || "Unknown error"));
+      }
+    } catch (e) {
+      alert("Network error starting checkout.");
+    }
+  }
+  // ===========================================
   </script>
 </body>
 </html>
