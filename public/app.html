@@ -26,25 +26,36 @@
     ul{margin:0;padding-left:20px;line-height:1.8}
     li{margin:4px 0}
     .opt{display:block;margin:8px 0}
+
     /* Inline viewer */
     .viewer-modal{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:9999}
     .viewer-box{background:#0b1223;border:1px solid #1f2a44;border-radius:12px;width:min(1000px,95vw);height:min(90vh,850px);position:relative;overflow:hidden}
     .viewer-top{position:absolute;top:8px;right:8px;display:flex;gap:8px;z-index:2}
     .wm{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;color:#ffffff1f;font-size:60px;font-weight:800;letter-spacing:2px;transform:rotate(-20deg);z-index:1}
     .pdf-embed{position:absolute;inset:0;border:0;width:100%;height:100%;z-index:0}
+
+    /* Access banner (non-intrusive) */
+    .banner{margin:10px 0;padding:10px;border-radius:10px;background:#1f2937;border:1px solid #334155;color:#e5e7eb;font-size:14px}
+    .banner a{color:#93c5fd}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header class="card">
-      <a class="btn" href="/">← Home</a>
+      <a class="btn" href="/" role="button">← Home</a>
       <h1 style="display:inline-block;margin-right:8px">PlumbWise — Revision, Resources & Mock Exams</h1>
       <span id="accessState" class="muted">Access: Locked</span>
       <p class="muted">Open a module → Revision to view resources. Downloads are discouraged.</p>
 
+      <div id="accessBanner" class="banner" style="display:none">
+        Access is locked. You need an active subscription to open resources and mocks.
+        <button id="subscribeBtn" class="btn primary" style="margin-left:8px" onclick="subscribe()">Subscribe (£5.99/mo)</button>
+        <button id="alreadyBtn" class="btn" style="margin-left:6px" onclick="alreadySubscribed()">I already subscribed</button>
+      </div>
+
       <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap">
-        <button id="subscribeBtn" class="btn primary" onclick="subscribe()">Subscribe (£5.99/mo)</button>
-        <button id="alreadyBtn" class="btn" onclick="alreadySubscribed()">I already subscribed</button>
+        <button id="subscribeBtnTop" class="btn primary" onclick="subscribe()">Subscribe (£5.99/mo)</button>
+        <button id="alreadyBtnTop" class="btn" onclick="alreadySubscribed()">I already subscribed</button>
       </div>
     </header>
     <main id="app"></main>
@@ -181,13 +192,14 @@
     const badge = document.getElementById("accessState");
     if (badge) badge.textContent = isActive() ? "Access: Active" : "Access: Locked";
 
-    // Hide only Subscribe when active
-    const subBtn = document.getElementById("subscribeBtn");
-    if (subBtn) subBtn.style.display = isActive() ? "none" : "";
+    // Hide only Subscribe when active; "Already subscribed" always visible
+    const subTop = document.getElementById("subscribeBtnTop");
+    const subInline = document.getElementById("subscribeBtn");
+    if (subTop)    subTop.style.display    = isActive() ? "none" : "";
+    if (subInline) subInline.style.display = isActive() ? "none" : "";
 
-    // Always keep "Already subscribed" visible
-    const asBtn = document.getElementById("alreadyBtn");
-    if (asBtn) asBtn.style.display = "";
+    const banner = document.getElementById("accessBanner");
+    banner.style.display = isActive() ? "none" : "block";
   }
   function setActive(email, active){
     if (active) {
@@ -201,20 +213,20 @@
   function isActive(){ return localStorage.getItem("plumbwise_active")==="1"; }
   function savedEmail(){ return localStorage.getItem("plumbwise_email") || ""; }
 
-  async function recheckByEmail(){
-    const email = savedEmail() || prompt("Enter your subscription email to check access:");
-    if (!email) return false;
-    localStorage.setItem("plumbwise_email", email);
-    const res = await fetch("/api/subscription-status", {
-      method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ email })
-    });
-    const data = await res.json();
-    setActive(email, !!data.active);
-    return !!data.active;
+  async function verifyByEmailSilently(){ // no prompts
+    const email = savedEmail();
+    if (!email) return;
+    try {
+      const res = await fetch("/api/subscription-status", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      setActive(email, !!data.active);
+    } catch { /* keep local state if offline */ }
   }
 
-  async function confirmFromSessionId(){
+  async function confirmFromSessionId(){ // after Stripe redirects back
     const sid = new URLSearchParams(location.search).get("session_id");
     if (!sid) return;
     const res = await fetch("/api/subscription-status", {
@@ -227,21 +239,18 @@
       history.replaceState({}, "", location.pathname); // clean URL
       alert("Subscription active – thanks!");
     } else {
-      alert("We couldn’t confirm your subscription yet.");
+      // Don’t prompt here; just keep banner visible
     }
   }
 
+  // Gate only the protected actions (never runs on Home/Revision render)
   async function requireActive(){
     if (isActive()) return true;
-    const ok = await recheckByEmail();
-    if (!ok) {
-      const go = confirm("Subscription required to access. Subscribe now?");
-      if (go) subscribe();
-    }
-    return ok;
+    reflectAccessUI(); // show banner instead of prompting
+    return false;
   }
 
-  // Resource viewer
+  // Resource viewer (only called after requireActive passes)
   function encodePath(p){ return p.split('/').map((seg,i)=> i===0?seg:encodeURIComponent(seg)).join('/'); }
   function _openInline(raw){
     const file = encodePath(raw);
@@ -265,7 +274,7 @@
   }
   window.openInline = async (p)=>{ if (!(await requireActive())) return; _openInline(p); };
 
-  // Quiz wrappers
+  // Quiz wrappers (protected)
   const _startQuiz = (id)=>{ 
     const qs = (QB[id]||[]).map((q,i)=>({...q,_id:`${id}_${i}`}));
     if(!qs.length){ alert("No questions in this module yet."); return; }
@@ -274,15 +283,15 @@
   };
   window.startQuiz = async (id)=>{ if (!(await requireActive())) return; _startQuiz(id); };
 
-  /* ---------------- Screens ---------------- */
+  /* ---------------- Screens (no gating here) ---------------- */
   function home(){
     const cards = MODULES.map(m=>`
       <div class="card">
         <h2>${m.title}</h2>
         <div class="note">${(NOTES[m.id]||[])[0]||""}</div>
         <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
-          <button class="btn" onclick="revision('${m.id}')">Revision</button>
-          <button class="btn primary" onclick="startQuiz('${m.id}')">Mock Exam</button>
+          <button class="btn" type="button" onclick="revision('${m.id}')">Revision</button>
+          <button class="btn primary" type="button" onclick="startQuiz('${m.id}')">Mock Exam</button>
         </div>
       </div>
     `).join("");
@@ -302,15 +311,15 @@
             <h3>Resources</h3>
             <ul>
               ${files.map(r=>`<li>
-                <button class="btn" onclick="openInline('${r.file}')">View</button>
+                <button class="btn" type="button" onclick="openInline('${r.file}')">View</button>
                 <span class="muted" style="margin-left:8px">${r.label}</span>
               </li>`).join("")}
             </ul>
             <p class="muted">Viewing only. Browser toolbars may still appear; screenshots can’t be fully prevented.</p>
           </div>` : ``}
         <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap">
-          <button class="btn primary" onclick="startQuiz('${id}')">Start Mock</button>
-          <button class="btn" onclick="home()">← Back</button>
+          <button class="btn primary" type="button" onclick="startQuiz('${id}')">Start Mock</button>
+          <button class="btn" type="button" onclick="home()">← Back</button>
         </div>
       </div>
     `;
@@ -328,9 +337,9 @@
         <h2>${s.title} (${cur}/${total})</h2>
         <b>${q.q}</b><div>${opts}</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn" onclick="prevQ()">Back</button>
-          <button class="btn" onclick="nextQ()">Next</button>
-          <button class="btn primary" onclick="submitQ()">Submit</button>
+          <button class="btn" type="button" onclick="prevQ()">Back</button>
+          <button class="btn" type="button" onclick="nextQ()">Next</button>
+          <button class="btn primary" type="button" onclick="submitQ()">Submit</button>
         </div>
         <p class="muted" style="margin-top:8px">${q.type==="multi"?"Select all that apply":"Select one"}.</p>
       </div>`;
@@ -367,30 +376,15 @@
     const email = prompt("Enter the email you used to subscribe:");
     if (!email) return;
     localStorage.setItem("plumbwise_email", email);
-    const ok = await recheckByEmail();
-    alert(ok ? "Access enabled on this device." : "No active subscription found for that email (check test vs live mode).");
+    await verifyByEmailSilently();
   }
 
-  /* ---------------- Boot: verify every load ---------------- */
+  /* ---------------- Boot: verify gently every load ---------------- */
   window.addEventListener('DOMContentLoaded', async () => {
-    reflectAccessUI();           // show local state
+    reflectAccessUI();            // show local state
     await confirmFromSessionId(); // activate if returning from Stripe
-
-    // Always re-verify by email if we have one saved (keeps access after refresh)
-    const email = savedEmail();
-    if (email) {
-      try {
-        const res = await fetch("/api/subscription-status", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email })
-        });
-        const data = await res.json();
-        setActive(email, !!data.active);
-      } catch {/* keep local state if offline */}
-    }
-
-    home(); // render UI
+    await verifyByEmailSilently();// silent server check if email saved
+    home();                       // render UI
   });
   </script>
 
