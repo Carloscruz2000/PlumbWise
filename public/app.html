@@ -6,7 +6,7 @@
 
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
-  <meta name="theme-color" content="#1e3a8a">
+  <meta name="theme-color" content="#0b1223">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -14,13 +14,75 @@
   <title>PlumbWise — Revision, Resources & Mocks</title>
 
   <style>
-    html,body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:#0f172a;color:#e5e7eb}
-    .wrap{max-width:960px;margin:0 auto;padding:18px}
-    .card{background:#0b1223;border:1px solid #1f2a44;border-radius:12px;padding:16px;margin:14px 0}
-    .btn{display:inline-block;padding:10px 14px;border:1px solid #27324f;border-radius:10px;text-decoration:none;color:#e5e7eb;background:#111a33;cursor:pointer}
-    .btn.primary{background:#2563eb;border-color:#2563eb}
-    .btn.primary:hover{background:#1e4fd1}
-    .muted{color:#94a3b8}
+    :root{
+      --bg-overlay: linear-gradient(180deg,#0b1223cc 0%, #0f172acc 70%, #0f172a 100%);
+      --accent: #d97706;         /* copper */
+      --accent-dark: #b45309;    /* darker copper */
+      --steel: #94a3b8;          /* steel grey */
+      --panel: #0b1223;
+      --panel-br: #1f2a44;
+      --text: #e5e7eb;
+    }
+    html,body{margin:0;height:100%;background:#0f172a;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+    body{
+      /* Optional background photos — upload one or both to /public/images/ */
+      background-image: var(--bg-overlay),
+        url('/images/bg-workshop.jpg'),
+        url('/images/bg-copper.jpg');
+      background-size: cover, cover, cover;
+      background-position: center, center, center;
+      background-attachment: fixed;
+    }
+    .wrap{max-width:1080px;margin:0 auto;padding:18px}
+    .hero{
+      background: linear-gradient(145deg,#0f172a 0%, #0b1223 50%, #0b1020 100%);
+      border:1px solid #263253;
+      border-radius:16px;
+      padding:18px;
+      margin:18px 0 14px 0;
+      position:relative;
+      overflow:hidden;
+      box-shadow: 0 10px 30px #00000055;
+    }
+    .hero:before{
+      content:"";
+      position:absolute;inset:-1px;
+      background: radial-gradient(800px 200px at 30% -10%, #1f2937aa, transparent 70%);
+      pointer-events:none;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap
+    }
+    .logo{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:56px;height:56px;border-radius:14px;
+      background: radial-gradient(120% 120% at 30% 20%, #f59e0b 0%, #d97706 35%, #7c2d12 100%);
+      border:1px solid #7c2d12;
+      box-shadow: inset 0 0 20px #00000055, 0 6px 14px #00000055;
+    }
+    .brand h1{margin:0;font-weight:800;letter-spacing:.4px}
+    .brand small{display:block;color:var(--steel)}
+    .pipe{
+      height:10px;border-radius:8px;margin:10px 0;
+      background:
+        linear-gradient(90deg, transparent 0 8px, #0000 0),
+        linear-gradient(180deg,#c0841b,#8a4b0d);
+      border:1px solid #6b3a0a;
+      box-shadow: inset 0 2px 4px #00000055, 0 2px 10px #00000044;
+      position:relative;
+    }
+    .pipe:after{
+      content:"";position:absolute;inset:0;
+      background: repeating-linear-gradient(90deg, #ffffff22 0 2px, #0000 2px 10px);
+      mix-blend-mode:overlay;pointer-events:none;border-radius:8px;
+    }
+
+    .card{background:var(--panel);border:1px solid var(--panel-br);border-radius:12px;padding:16px;margin:14px 0}
+    .btn{display:inline-block;padding:10px 14px;border:1px solid #27324f;border-radius:10px;text-decoration:none;color:var(--text);background:#111a33;cursor:pointer;transition:transform .05s ease}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:var(--accent);border-color:var(--accent)}
+    .btn.primary:hover{background:var(--accent-dark)}
+    .muted{color:var(--steel)}
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
     .note{background:#0d172f;border:1px solid #223055;padding:12px;border-radius:10px}
     ul{margin:0;padding-left:20px;line-height:1.8}
@@ -29,35 +91,55 @@
 
     /* Inline viewer */
     .viewer-modal{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:9999}
-    .viewer-box{background:#0b1223;border:1px solid #1f2a44;border-radius:12px;width:min(1000px,95vw);height:min(90vh,850px);position:relative;overflow:hidden}
+    .viewer-box{background:var(--panel);border:1px solid var(--panel-br);border-radius:12px;width:min(1000px,95vw);height:min(90vh,850px);position:relative;overflow:hidden}
     .viewer-top{position:absolute;top:8px;right:8px;display:flex;gap:8px;z-index:2}
-    .wm{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;color:#ffffff1f;font-size:60px;font-weight:800;letter-spacing:2px;transform:rotate(-20deg);z-index:1}
+    .wm{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;color:#ffffff12;font-size:62px;font-weight:900;letter-spacing:3px;transform:rotate(-18deg);z-index:1}
     .pdf-embed{position:absolute;inset:0;border:0;width:100%;height:100%;z-index:0}
 
-    /* Access banner (non-intrusive) */
-    .banner{margin:10px 0;padding:10px;border-radius:10px;background:#1f2937;border:1px solid #334155;color:#e5e7eb;font-size:14px}
+    /* Banner */
+    .banner{margin:10px 0;padding:10px;border-radius:10px;background:#1f2937d0;border:1px solid #334155;color:var(--text);font-size:14px;backdrop-filter: blur(2px)}
     .banner a{color:#93c5fd}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <header class="card">
-      <a class="btn" href="/" role="button">← Home</a>
-      <h1 style="display:inline-block;margin-right:8px">PlumbWise — Revision, Resources & Mock Exams</h1>
-      <span id="accessState" class="muted">Access: Locked</span>
-      <p class="muted">Open a module → Revision to view resources. Downloads are discouraged.</p>
+    <header class="hero">
+      <div class="brand">
+        <!-- Inline SVG logo (wrench + pipe drop) -->
+        <div class="logo" aria-hidden="true">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <!-- Pipe ring -->
+            <circle cx="12" cy="12" r="8.5" stroke="rgba(0,0,0,.55)" stroke-width="3"></circle>
+            <circle cx="12" cy="12" r="7.5" stroke="#1f2937" stroke-width="2"></circle>
+            <!-- Wrench -->
+            <path d="M7.2 7.6a4.2 4.2 0 0 0 5.6 5.6l3.6 3.6a1.2 1.2 0 0 0 1.7-1.7l-3.6-3.6a4.2 4.2 0 0 0-5.6-5.6l1.7 1.7-1.1 1.1-1.7-1.7z" fill="#111827"></path>
+            <path d="M8 8a3.6 3.6 0 0 0 5.1 5.1l3.9 3.9a.8.8 0 1 0 1.1-1.1l-3.9-3.9A3.6 3.6 0 0 0 8 8z" fill="#fde68a"></path>
+            <!-- Drop -->
+            <path d="M12 18c1.6 0 3-1.4 3-3.1 0-1.6-1.5-3.6-3-5.1-1.5 1.5-3 3.5-3 5.1 0 1.7 1.4 3.1 3 3.1z" fill="#60a5fa" opacity=".95"></path>
+          </svg>
+        </div>
+
+        <div>
+          <h1 style="margin:0;font-size:22px">PlumbWise <small class="muted">Revision, Resources & Mock Exams</small></h1>
+          <small id="accessState" class="muted">Access: Locked</small>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+          <button id="subscribeBtnTop" class="btn primary" onclick="subscribe()">Subscribe (£5.99/mo)</button>
+          <button id="alreadyBtnTop" class="btn" onclick="alreadySubscribed()">I already subscribed</button>
+        </div>
+      </div>
+
+      <div class="pipe" aria-hidden="true"></div>
+
+      <p class="muted" style="margin:0">Open a module → Revision to view resources. Downloads are discouraged.</p>
 
       <div id="accessBanner" class="banner" style="display:none">
         Access is locked. You need an active subscription to open resources and mocks.
         <button id="subscribeBtn" class="btn primary" style="margin-left:8px" onclick="subscribe()">Subscribe (£5.99/mo)</button>
         <button id="alreadyBtn" class="btn" style="margin-left:6px" onclick="alreadySubscribed()">I already subscribed</button>
       </div>
-
-      <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap">
-        <button id="subscribeBtnTop" class="btn primary" onclick="subscribe()">Subscribe (£5.99/mo)</button>
-        <button id="alreadyBtnTop" class="btn" onclick="alreadySubscribed()">I already subscribed</button>
-      </div>
     </header>
+
     <main id="app"></main>
   </div>
 
@@ -238,19 +320,17 @@
       setActive(data.email || savedEmail(), true);
       history.replaceState({}, "", location.pathname); // clean URL
       alert("Subscription active – thanks!");
-    } else {
-      // Don’t prompt here; just keep banner visible
     }
   }
 
-  // Gate only the protected actions (never runs on Home/Revision render)
+  // Gate only protected actions; show banner instead of popups
   async function requireActive(){
     if (isActive()) return true;
-    reflectAccessUI(); // show banner instead of prompting
+    reflectAccessUI();
     return false;
   }
 
-  // Resource viewer (only called after requireActive passes)
+  // Resource viewer
   function encodePath(p){ return p.split('/').map((seg,i)=> i===0?seg:encodeURIComponent(seg)).join('/'); }
   function _openInline(raw){
     const file = encodePath(raw);
@@ -286,7 +366,7 @@
   /* ---------------- Screens (no gating here) ---------------- */
   function home(){
     const cards = MODULES.map(m=>`
-      <div class="card">
+      <div class="card" style="backdrop-filter: blur(2px);">
         <h2>${m.title}</h2>
         <div class="note">${(NOTES[m.id]||[])[0]||""}</div>
         <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
@@ -303,7 +383,7 @@
     const notes = NOTES[id] || [];
     const files = RES[id] || [];
     app.innerHTML = `
-      <div class="card">
+      <div class="card" style="backdrop-filter: blur(2px);">
         <h2>${mod.title} — Revision</h2>
         ${notes.length ? notes.map(n=>`<div class="note">${n}</div>`).join("") : `<div class="note">No notes yet.</div>`}
         ${ files.length ? `
@@ -333,7 +413,7 @@
       : q.options.map((o,idx)=>`<label class="opt"><input type="radio" name="opt" ${sel.includes(idx)?"checked":""} onchange="pickOne('${q._id}',${idx})"/> ${o}</label>`).join("");
 
     app.innerHTML = `
-      <div class="card">
+      <div class="card" style="backdrop-filter: blur(2px);">
         <h2>${s.title} (${cur}/${total})</h2>
         <b>${q.q}</b><div>${opts}</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -376,14 +456,33 @@
     const email = prompt("Enter the email you used to subscribe:");
     if (!email) return;
     localStorage.setItem("plumbwise_email", email);
-    await verifyByEmailSilently();
+    // Silent verify; UI will reflect if active
+    try{
+      const r = await fetch("/api/subscription-status",{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ email })
+      });
+      const d = await r.json();
+      setActive(email, !!d.active);
+      if(!d.active) alert("No active subscription found for that email (check test vs live mode in Stripe).");
+    }catch{}
   }
 
   /* ---------------- Boot: verify gently every load ---------------- */
   window.addEventListener('DOMContentLoaded', async () => {
     reflectAccessUI();            // show local state
     await confirmFromSessionId(); // activate if returning from Stripe
-    await verifyByEmailSilently();// silent server check if email saved
+    await (async ()=>{            // silent verify if email saved
+      const email = savedEmail(); if(!email) return;
+      try{
+        const r = await fetch("/api/subscription-status",{
+          method:"POST",headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ email })
+        });
+        const d = await r.json();
+        setActive(email, !!d.active);
+      }catch{}
+    })();
     home();                       // render UI
   });
   </script>
