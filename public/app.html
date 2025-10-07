@@ -81,6 +81,7 @@
           <small id="accessState" class="muted">Access: Locked</small>
         </div>
         <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+          <button id="trialBtnTop" class="btn" onclick="startTrial()">Start Free Trial (1 day)</button>
           <button id="subscribeBtnTop" class="btn primary" onclick="subscribe()">Subscribe (£5.99/mo)</button>
           <button id="alreadyBtnTop" class="btn" onclick="alreadySubscribed()">I already subscribed</button>
         </div>
@@ -91,7 +92,8 @@
 
       <div id="accessBanner" class="banner" style="display:none">
         Access is locked. You need an active subscription to open resources and mocks.
-        <button id="subscribeBtn" class="btn primary" style="margin-left:8px" onclick="subscribe()">Subscribe (£5.99/mo)</button>
+        <button id="trialBtn" class="btn" style="margin-left:8px" onclick="startTrial()">Start Free Trial (1 day)</button>
+        <button id="subscribeBtn" class="btn primary" style="margin-left:6px" onclick="subscribe()">Subscribe (£5.99/mo)</button>
         <button id="alreadyBtn" class="btn" style="margin-left:6px" onclick="alreadySubscribed()">I already subscribed</button>
       </div>
     </header>
@@ -220,7 +222,7 @@
   };
 
   const app = document.getElementById("app");
-  const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+  const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j]]; } return a; };
 
   /* Access & subscription helpers */
   function reflectAccessUI(){
@@ -228,22 +230,26 @@
     if (badge) badge.textContent = isActive() ? "Access: Active" : "Access: Locked";
     const subTop = document.getElementById("subscribeBtnTop");
     const subInline = document.getElementById("subscribeBtn");
-    if (subTop)    subTop.style.display    = isActive() ? "none" : "";
-    if (subInline) subInline.style.display = isActive() ? "none" : "";
+    const trialTop = document.getElementById("trialBtnTop");
+    const trialInline = document.getElementById("trialBtn");
+    if (subTop)     subTop.style.display     = isActive() ? "none" : "";
+    if (subInline)  subInline.style.display  = isActive() ? "none" : "";
+    if (trialTop)   trialTop.style.display   = isActive() ? "none" : "";
+    if (trialInline)trialInline.style.display= isActive() ? "none" : "";
     const banner = document.getElementById("accessBanner");
     banner.style.display = isActive() ? "none" : "block";
   }
   function setActive(email, active){
     if (active) {
       localStorage.setItem("plumbwise_active","1");
-      if (email) localStorage.setItem("plumbwise_email", email);
+      if (email) localStorage.setItem("plumbwise_email", (email||"").toLowerCase());
     } else {
       localStorage.removeItem("plumbwise_active");
     }
     reflectAccessUI();
   }
   function isActive(){ return localStorage.getItem("plumbwise_active")==="1"; }
-  function savedEmail(){ return localStorage.getItem("plumbwise_email") || ""; }
+  function savedEmail(){ return (localStorage.getItem("plumbwise_email") || "").toLowerCase(); }
 
   async function verifyByEmailSilently(){
     const email = savedEmail(); if (!email) return;
@@ -276,7 +282,7 @@
     return false;
   }
 
-  /* Viewer */
+  /* Inline PDF Viewer */
   function encodePath(p){ return p.split('/').map((seg,i)=> i===0?seg:encodeURIComponent(seg)).join('/'); }
   function _openInline(raw){
     const file = encodePath(raw);
@@ -381,14 +387,29 @@
     home();
   }
 
+  /* Subscribe / Trial / Already subscribed */
   async function subscribe() {
-    const email = prompt("Enter your email to subscribe (receipt will be sent here):");
+    const email = prompt("Enter your email to subscribe (receipt will be sent here):", savedEmail());
     if (!email) return;
-    localStorage.setItem("plumbwise_email", email);
+    localStorage.setItem("plumbwise_email", email.toLowerCase());
     try {
       const res = await fetch("/api/checkout", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email: email.toLowerCase() })
+      });
+      const data = await res.json();
+      if (data.url) window.location = data.url;
+      else alert("Checkout failed: " + (data.error || "Unknown error"));
+    } catch { alert("Network error starting checkout."); }
+  }
+  async function startTrial(){
+    const email = prompt("Enter your email for a 1-day free trial (card required):", savedEmail());
+    if (!email) return;
+    localStorage.setItem("plumbwise_email", email.toLowerCase());
+    try {
+      const res = await fetch("/api/checkout", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ email: email.toLowerCase() })
       });
       const data = await res.json();
       if (data.url) window.location = data.url;
@@ -396,13 +417,13 @@
     } catch { alert("Network error starting checkout."); }
   }
   async function alreadySubscribed(){
-    const email = prompt("Enter the email you used to subscribe:");
+    const email = prompt("Enter the email you used to subscribe:", savedEmail());
     if (!email) return;
-    localStorage.setItem("plumbwise_email", email);
+    localStorage.setItem("plumbwise_email", email.toLowerCase());
     try{
       const r = await fetch("/api/subscription-status",{
         method:"POST",headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email: email.toLowerCase() })
       });
       const d = await r.json();
       setActive(email, !!d.active);
